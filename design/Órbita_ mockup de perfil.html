@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Órbita · perfil de nova_kid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="logo" href="#" aria-label="Órbita, inicio">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <circle cx="13" cy="13" r="10" fill="none" style="stroke:var(--accent-1)" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" style="fill:var(--accent-2)"/>
+        <circle cx="22" cy="9" r="2.4" style="fill:var(--text)"/>
+      </svg>
+      órbita
+    </a>
+    <nav aria-label="Principal">
+      <a href="#" aria-current="page">Perfil</a>
+      <a href="#">Explorar</a>
+      <a href="#">Mensajes<span class="count">3</span></a>
+      <a href="#">Blog</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="btn" id="themeBtn" aria-expanded="false" aria-controls="theme">Personalizar</button>
+  </div>
+</header>
+
+<section class="theme panel panel--neon" id="theme" hidden aria-label="Personalizar el tema">
+  <div class="in">
+    <h2>Tema del perfil</h2>
+    <div class="presets" id="presets"></div>
+    <label>Color principal <input type="color" id="c1" value="#ff3ddb"></label>
+    <label>Color secundario <input type="color" id="c2" value="#27d9f5"></label>
+    <p class="hint">Son variables CSS: cada usuario puede pisarlas con su propio estilo.</p>
+  </div>
+</section>
+
+<main>
+  <div class="grid" id="app">
+
+    <div class="col">
+      <div class="o2">
+        <div class="panel panel--quiet"><div class="in">
+          <h1 class="name">nova_kid</h1>
+          <p class="tagline">Mapeo estrellas de noche y armo playlists para mirarlas.</p>
+          <div class="mood" id="moodChipLeft"><span class="dot"></span><span id="mood">En línea</span></div>
+          <dl class="stats">
+            <div><dd>1.284</dd><dt>visitas</dt></div>
+            <div><dd>48</dd><dt>amigos</dt></div>
+            <div><dd>mar 2024</dd><dt>miembro desde</dt></div>
+          </dl>
+          <div class="actions">
+            <button class="btn btn--solid" id="addFriend" aria-pressed="false">Agregar a amigos</button>
+            <button class="btn">Enviar mensaje</button>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="o4">
+        <div class="panel"><div class="in about">
+          <h2>Sobre mí</h2>
+          <p>Hola, soy Nova. Fotografío el cielo desde la terraza, colecciono mapas estelares viejos y armo listas de música para las noches despejadas.</p>
+          <p>Si pasás por acá, dejame un comentario o mandame tu tema favorito para mirar el cielo.</p>
+          <ul class="tags">
+            <li>Astrofotografía</li>
+            <li>Synthwave</li>
+            <li>Mapas estelares</li>
+            <li>Café frío</li>
+            <li>Ciencia ficción</li>
+          </ul>
+          <p class="note">Esta sección acepta HTML y CSS propio: fondos, fuentes, GIFs y más.</p>
+        </div></div>
+      </div>
+
+      <div class="o7">
+        <div class="panel"><div class="in">
+          <h2>Comentarios <small id="ccount">3</small></h2>
+          <ul class="comments" id="comments">
+            <li>
+              <div class="ava hex" style="--h:190">K</div>
+              <div><div class="c-head"><b>kiro</b><time>hace 2 h</time></div>
+              <p class="c-body">¡La playlist de anoche estuvo increíble! Pasame el tema 2.</p></div>
+            </li>
+            <li>
+              <div class="ava hex" style="--h:120">V</div>
+              <div><div class="c-head"><b>vega_9</b><time>ayer</time></div>
+              <p class="c-body">Me copié el fondo de tu perfil, espero que no te moleste.</p></div>
+            </li>
+            <li>
+              <div class="ava hex" style="--h:45">L</div>
+              <div><div class="c-head"><b>lumi</b><time>hace 3 días</time></div>
+              <p class="c-body">Cuando subas las fotos de Saturno avisame.</p></div>
+            </li>
+          </ul>
+          <div class="compose">
+            <input id="cin" type="text" placeholder="Escribí un comentario" aria-label="Escribí un comentario" maxlength="140">
+            <button class="btn" id="cbtn">Publicar</button>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="o1">
+        <div class="glow">
+          <div class="panel panel--neon hero"><div class="in">
+            <svg viewBox="0 0 520 380" role="img" aria-label="Avatar: astronauta con auriculares frente a un planeta">
+              <defs>
+                <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#0a0820"/><stop offset="1" stop-color="#1c0b30"/>
+                </linearGradient>
+                <radialGradient id="planet" cx=".35" cy=".3" r=".8">
+                  <stop offset="0" stop-color="#9fe2ff"/><stop offset=".45" stop-color="#2f74dc"/><stop offset="1" stop-color="#0a1a48"/>
+                </radialGradient>
+                <radialGradient id="moon" cx=".4" cy=".35" r=".8">
+                  <stop offset="0" stop-color="#d98bff"/><stop offset="1" stop-color="#3a1466"/>
+                </radialGradient>
+                <linearGradient id="suit" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#454a66"/><stop offset="1" stop-color="#141726"/>
+                </linearGradient>
+                <linearGradient id="visor" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#2a1a55"/><stop offset=".6" stop-color="#070511"/><stop offset="1" stop-color="#0d2b3a"/>
+                </linearGradient>
+              </defs>
+              <rect width="520" height="380" fill="url(#sky)"/>
+              <g fill="#fff">
+                <circle cx="40" cy="190" r="1.4"/><circle cx="110" cy="250" r="1"/><circle cx="170" cy="40" r="1.6"/>
+                <circle cx="300" cy="30" r="1"/><circle cx="470" cy="230" r="1.4"/><circle cx="500" cy="330" r="1"/>
+                <circle cx="60" cy="330" r="1.2"/><circle cx="230" cy="350" r="1"/><circle cx="350" cy="320" r="1.2"/>
+              </g>
+              <circle cx="420" cy="92" r="112" fill="url(#planet)"/>
+              <circle cx="420" cy="92" r="118" fill="none" style="stroke:var(--accent-2)" stroke-opacity=".35" stroke-width="3"/>
+              <circle cx="78" cy="78" r="46" fill="url(#moon)" opacity=".8"/>
+              <!-- torso -->
+              <path d="M112 380 C112 302 170 262 250 262 C330 262 388 302 388 380 Z" fill="url(#suit)" stroke="#5a6088" stroke-width="2"/>
+              <rect x="222" y="314" width="56" height="38" rx="6" fill="#1a1d2f" stroke="#ffb636" stroke-width="1.5"/>
+              <circle cx="236" cy="333" r="4" style="fill:var(--accent-2)"/><circle cx="250" cy="333" r="4" style="fill:var(--accent-1)"/><circle cx="264" cy="333" r="4" fill="#ffb636"/>
+              <!-- cable -->
+              <path d="M344 208 C384 252 338 296 296 306" fill="none" style="stroke:var(--accent-1)" stroke-width="2" opacity=".8"/>
+              <!-- casco -->
+              <circle cx="250" cy="170" r="94" fill="#2b2f49" stroke="#525880" stroke-width="4"/>
+              <ellipse cx="250" cy="172" rx="71" ry="63" fill="url(#visor)"/>
+              <ellipse cx="220" cy="146" rx="28" ry="13" transform="rotate(-25 220 146)" fill="#fff" opacity=".13"/>
+              <path d="M205 210 C235 226 272 226 300 206" fill="none" style="stroke:var(--accent-2)" stroke-opacity=".35" stroke-width="2"/>
+              <!-- auriculares -->
+              <path d="M158 152 C164 70 336 70 342 152" fill="none" stroke="#3b405e" stroke-width="9"/>
+              <path d="M158 152 C164 70 336 70 342 152" fill="none" style="stroke:var(--accent-1)" stroke-width="2"/>
+              <ellipse cx="156" cy="176" rx="17" ry="31" fill="#1a0f2e" style="stroke:var(--accent-1)" stroke-width="4"/>
+              <ellipse cx="344" cy="176" rx="17" ry="31" fill="#1a0f2e" style="stroke:var(--accent-1)" stroke-width="4"/>
+            </svg>
+            <div class="mood"><span class="dot"></span>en línea</div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="o3">
+        <div class="glow" id="playerWrap">
+          <div class="panel panel--neon"><div class="in">
+            <div class="player-top">
+              <div class="ring">
+                <svg viewBox="0 0 200 200" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" style="stop-color:var(--accent-1)"/><stop offset="1" style="stop-color:var(--accent-2)"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="deco" cx="100" cy="100" r="96" fill="none" style="stroke:var(--accent-2)" stroke-opacity=".5" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"/>
+                  <circle cx="100" cy="100" r="84" fill="none" style="stroke:var(--line)" stroke-width="6"/>
+                  <circle id="prog" cx="100" cy="100" r="84" fill="none" stroke="url(#pg)" stroke-width="6" stroke-linecap="round"
+                          transform="rotate(-90 100 100)" stroke-dasharray="527.79" stroke-dashoffset="527.79"/>
+                </svg>
+                <button class="playbtn" id="play" aria-label="Reproducir" aria-pressed="false">
+                  <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <svg id="icoPause" viewBox="0 0 24 24" fill="currentColor" hidden><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+                </button>
+              </div>
+              <div class="meta">
+                <p class="track-title" id="tt">Nocturno en órbita baja</p>
+                <p class="track-artist" id="ta">Vela Azul</p>
+                <div class="bars" id="bars" aria-hidden="true"></div>
+                <div class="time"><span id="cur">0:00</span><span id="dur">3:34</span></div>
+                <div class="skip">
+                  <button id="prev" aria-label="Tema anterior"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12 18 18V6z"/></svg></button>
+                  <button id="next" aria-label="Tema siguiente"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <ul class="playlist" id="list"></ul>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="o5">
+        <div class="panel"><div class="in">
+          <h2>Top 8</h2>
+          <ul class="friends">
+            <li><a href="#"><span class="hex on" style="--h:190">K</span>kiro</a></li>
+            <li><a href="#"><span class="hex" style="--h:120">V</span>vega_9</a></li>
+            <li><a href="#"><span class="hex on" style="--h:45">L</span>lumi</a></li>
+            <li><a href="#"><span class="hex" style="--h:330">T</span>tato</a></li>
+            <li><a href="#"><span class="hex" style="--h:260">M</span>mara.s</a></li>
+            <li><a href="#"><span class="hex on" style="--h:10">E</span>eclipse</a></li>
+            <li><a href="#"><span class="hex" style="--h:160">P</span>pilar</a></li>
+            <li><a href="#"><span class="hex" style="--h:220">Z</span>zeta</a></li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="o6">
+        <div class="panel"><div class="in">
+          <h2>Insignias</h2>
+          <ul class="badges">
+            <li class="badge hex" title="Primeros 100 perfiles"><span>✦</span></li>
+            <li class="badge hex" title="Playlist destacada"><span>♪</span></li>
+            <li class="badge hex" title="1.000 visitas"><span>★</span></li>
+            <li class="badge hex" title="Tema propio"><span>✎</span></li>
+            <li class="badge hex off" title="Racha de 30 días (bloqueada)"><span>▲</span></li>
+            <li class="badge hex off" title="Invitó a 10 amigos (bloqueada)"><span>●</span></li>
+          </ul>
+          <p class="badges-note">4 de 6 conseguidas</p>
+        </div></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>Mockup de diseño: los perfiles, nombres y canciones son de ejemplo.</footer>
+
+<script>
+(function () {
+  var tracks = [
+    { t: "Nocturno en órbita baja", a: "Vela Azul", d: 214 },
+    { t: "Señal de radio a las 3am", a: "Polvo Estelar", d: 187 },
+    { t: "Gravedad cero", a: "Cometa Club", d: 256 }
+  ];
+  var C = 2 * Math.PI * 84;
+  var i = 0, pos = 0, playing = false;
+  var $ = function (id) { return document.getElementById(id); };
+  var wrap = $("playerWrap");
+
+  function fmt(s) { s = Math.floor(s); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+
+  // barras del visualizador
+  var bars = $("bars");
+  for (var b = 0; b < 26; b++) {
+    var s = document.createElement("span");
+    s.style.setProperty("--d", (600 + Math.random() * 700).toFixed(0) + "ms");
+    s.style.setProperty("--s", (0.35 + Math.random() * 0.65).toFixed(2));
+    s.style.animationDelay = (-Math.random() * 800).toFixed(0) + "ms";
+    bars.appendChild(s);
+  }
+
+  // lista de temas
+  var list = $("list");
+  tracks.forEach(function (tr, n) {
+    var li = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.innerHTML = "<span></span><span class='d'></span>";
+    btn.children[0].textContent = tr.t + " · " + tr.a;
+    btn.children[1].textContent = fmt(tr.d);
+    btn.addEventListener("click", function () { i = n; pos = 0; playing = true; render(); });
+    li.appendChild(btn); list.appendChild(li);
+  });
+
+  function render() {
+    var tr = tracks[i];
+    $("tt").textContent = tr.t;
+    $("ta").textContent = tr.a;
+    $("dur").textContent = fmt(tr.d);
+    $("cur").textContent = fmt(pos);
+    $("prog").setAttribute("stroke-dashoffset", (C * (1 - pos / tr.d)).toFixed(2));
+    $("icoPlay").hidden = playing;
+    $("icoPause").hidden = !playing;
+    $("play").setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    $("play").setAttribute("aria-pressed", String(playing));
+    wrap.classList.toggle("playing", playing);
+    $("mood").textContent = playing ? "Escuchando " + tr.t : "En línea";
+    Array.prototype.forEach.call(list.querySelectorAll("button"), function (bt, n) {
+      bt.setAttribute("aria-current", String(n === i));
+    });
+  }
+  function go(n) { i = (n + tracks.length) % tracks.length; pos = 0; render(); }
+
+  $("play").addEventListener("click", function () { playing = !playing; render(); });
+  $("prev").addEventListener("click", function () { go(i - 1); });
+  $("next").addEventListener("click", function () { go(i + 1); });
+  setInterval(function () {
+    if (!playing) return;
+    pos += 0.25;
+    if (pos >= tracks[i].d) { go(i + 1); return; }
+    $("cur").textContent = fmt(pos);
+    $("prog").setAttribute("stroke-dashoffset", (C * (1 - pos / tracks[i].d)).toFixed(2));
+  }, 250);
+  render();
+
+  // solicitud de amistad
+  var add = $("addFriend");
+  add.addEventListener("click", function () {
+    var sent = add.getAttribute("aria-pressed") === "true";
+    add.setAttribute("aria-pressed", String(!sent));
+    add.textContent = sent ? "Agregar a amigos" : "Solicitud enviada";
+  });
+
+  // comentarios
+  var n = 3;
+  function post() {
+    var inp = $("cin"), v = inp.value.trim();
+    if (!v) return;
+    var li = document.createElement("li");
+    li.innerHTML = "<div class='ava hex' style='--h:280'>V</div><div><div class='c-head'><b></b><time>ahora</time></div><p class='c-body'></p></div>";
+    li.querySelector("b").textContent = "vos";
+    li.querySelector(".c-body").textContent = v;
+    $("comments").insertBefore(li, $("comments").firstChild);
+    inp.value = ""; n += 1; $("ccount").textContent = n;
+  }
+  $("cbtn").addEventListener("click", post);
+  $("cin").addEventListener("keydown", function (e) { if (e.key === "Enter") post(); });
+
+  // enlaces de muestra: no navegan
+  Array.prototype.forEach.call(document.querySelectorAll("a[href='#']"), function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); });
+  });
+
+  // personalización del tema
+  var root = document.documentElement;
+  var panel = $("theme"), tbtn = $("themeBtn");
+  tbtn.addEventListener("click", function () {
+    var open = panel.hidden;
+    panel.hidden = !open;
+    tbtn.setAttribute("aria-expanded", String(open));
+  });
+  function setTheme(a, b) {
+    root.style.setProperty("--accent-1", a);
+    root.style.setProperty("--accent-2", b);
+    $("c1").value = a; $("c2").value = b;
+  }
+  $("c1").addEventListener("input", function (e) { root.style.setProperty("--accent-1", e.target.value); });
+  $("c2").addEventListener("input", function (e) { root.style.setProperty("--accent-2", e.target.value); });
+  [
+    { n: "Neón", a: "#ff3ddb", b: "#27d9f5" },
+    { n: "Aurora", a: "#3dff9e", b: "#ffb636" },
+    { n: "Brasa", a: "#ff5a4d", b: "#7a7cff" }
+  ].forEach(function (p) {
+    var bt = document.createElement("button");
+    bt.innerHTML = "<span class='sw'></span><span></span>";
+    bt.children[0].style.background = "linear-gradient(135deg," + p.a + "," + p.b + ")";
+    bt.children[1].textContent = p.n;
+    bt.addEventListener("click", function () { setTheme(p.a, p.b); });
+    $("presets").appendChild(bt);
+  });
+})();
+</script>
+</body>
+</html>

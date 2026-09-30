@@ -1,26 +1,86 @@
 @import "tailwindcss";
 
+/* Tema por defecto. Todo el color sale de estas variables, así cada perfil
+   puede cambiarlas sin tocar los componentes. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --void: #06050d;
+  --surface: #0d0b1a;
+  --surface-2: #151230;
+  --line: #2a2447;
+  --text: #ece9fb;
+  --muted: #a29cc4;
+  --accent-1: #ff3ddb;
+  --accent-2: #27d9f5;
+  --amber: #ffb636;
+  --font-display: var(--font-chakra), "Trebuchet MS", system-ui, sans-serif;
+  --font-data: var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Expone los tokens como utilidades de Tailwind: bg-surface, text-muted, etc. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-void: var(--void);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  --color-amber: var(--amber);
+  --font-sans: var(--font-display);
+  --font-mono: var(--font-data);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--void);
+  color: var(--text);
+  font: 400 15px/1.55 var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cielo: estrellas estáticas + dos manchas de nebulosa */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 8% 14%, #ffffffcc 50%, transparent 52%),
+    radial-gradient(1px 1px at 22% 62%, #ffffff99 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 35% 28%, #ffffffdd 50%, transparent 52%),
+    radial-gradient(1px 1px at 48% 80%, #ffffff88 50%, transparent 52%),
+    radial-gradient(1px 1px at 61% 12%, #ffffffbb 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 74% 55%, #ffffffcc 50%, transparent 52%),
+    radial-gradient(1px 1px at 88% 34%, #ffffff99 50%, transparent 52%),
+    radial-gradient(1px 1px at 93% 88%, #ffffffaa 50%, transparent 52%),
+    radial-gradient(1px 1px at 14% 90%, #ffffff88 50%, transparent 52%),
+    radial-gradient(1px 1px at 55% 45%, #ffffff77 50%, transparent 52%),
+    radial-gradient(60% 45% at 10% 0%, color-mix(in srgb, var(--accent-1) 16%, transparent), transparent 70%),
+    radial-gradient(55% 40% at 100% 30%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 70%);
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
