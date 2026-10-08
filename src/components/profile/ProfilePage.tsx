@@ -26,7 +26,7 @@ export function ProfilePage({ profile }: { profile: Profile }) {
               />
             </div>
             <div className="o4">
-              <About paragraphs={profile.aboutParagraphs} interests={profile.interests} />
+              <About handle={profile.handle} />
             </div>
             <div className="o7">
               <Comments initial={profile.comments} />

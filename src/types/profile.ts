@@ -48,10 +48,10 @@ export type Profile = {
   tagline: string;
   status: string;
   stats: ProfileStats;
-  // Por ahora texto plano. Cuando llegue el sanitizado, esto pasa a ser
-  // aboutHtml + customCss, renderizados en un iframe con sandbox.
-  aboutParagraphs: string[];
-  interests: string[];
+  // Lo que escribe la persona. Se sanitiza (sanitizeHtml / sanitizeCss) y se muestra
+  // dentro de un iframe aislado: ver src/app/p/[handle]/content/route.ts.
+  aboutHtml: string;
+  customCss: string;
   tracks: Track[];
   top8: Friend[];
   badges: Badge[];
