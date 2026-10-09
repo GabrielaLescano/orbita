@@ -1,4 +1,5 @@
 import type { ThemeTokens } from "@/types/profile";
+import { AuthButton } from "./AuthButton";
 import { ThemeMenu } from "./ThemeMenu";
 
 export function TopBar({ theme }: { theme: ThemeTokens }) {
@@ -22,6 +23,7 @@ export function TopBar({ theme }: { theme: ThemeTokens }) {
           <a href="#">Blog</a>
         </nav>
         <span className="spacer" />
+        <AuthButton />
         <ThemeMenu initial={theme} />
       </div>
     </header>
