@@ -31,7 +31,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ han
   }
 
   // Por ahora se sanitiza acá porque los datos de ejemplo no pasan por un "guardar".
-  // Al agregar la base de datos, esto se hace al guardar el perfil y acá solo se lee.
+  // Con la base de datos, esto se hace al guardar el perfil y acá solo se lee.
   const html = sanitizeHtml(profile.aboutHtml);
   const { css } = sanitizeCss(profile.customCss);
 

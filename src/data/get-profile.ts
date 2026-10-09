@@ -1,7 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { comments, profiles, tracks, users } from "@/db/schema";
-import type { Profile } from "@/types/profile";
+import type { Profile, ProfileComment, Track } from "@/types/profile";
 import { demoProfile } from "./demo-profile";
 
 /** Los handles válidos: letras, números, punto, guion y guion bajo. */
@@ -41,10 +41,20 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
     stats: { visits: 0, friends: 0, memberSince: formatMemberSince(row.createdAt) },
     aboutHtml: row.aboutHtml,
     customCss: row.customCss,
-    tracks: row.tracks.map((t) => ({ id: t.id, title: t.title, artist: t.artist, durationSec: t.durationSec })),
+    tracks:
+      row.tracks.length > 0
+        ? row.tracks.map(
+            (t: (typeof row.tracks)[number]): Track => ({
+              id: t.id,
+              title: t.title,
+              artist: t.artist,
+              durationSec: t.durationSec,
+            }),
+          )
+        : demoProfile.tracks,
     top8: demoProfile.top8,
     badges: demoProfile.badges,
-    comments: row.comments.map((c) => ({
+    comments: row.comments.map((c: (typeof row.comments)[number]): ProfileComment => ({
       id: c.id,
       author: c.author.name ?? "usuario",
       initial: (c.author.name ?? "?").charAt(0).toUpperCase(),
@@ -63,6 +73,14 @@ export async function isHandleTaken(handle: string): Promise<boolean> {
     columns: { id: true },
   });
   return Boolean(existing);
+}
+
+export async function getHandleByUserId(userId: string): Promise<string | null> {
+  const row = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, userId),
+    columns: { handle: true },
+  });
+  return row?.handle ?? null;
 }
 
 export async function getProfileIdByUserId(userId: string): Promise<string | null> {

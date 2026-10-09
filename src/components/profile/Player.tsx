@@ -51,13 +51,23 @@ export function Player({ tracks }: { tracks: Track[] }) {
   const track = tracks[state.index];
 
   useEffect(() => {
-    if (!state.playing) return;
+    if (!state.playing || !track) return;
     const id = window.setInterval(
       () => dispatch({ type: "tick", durations }),
       TICK_SECONDS * 1000,
     );
     return () => window.clearInterval(id);
-  }, [state.playing, durations]);
+  }, [state.playing, track, durations]);
+
+  if (!track) {
+    return (
+      <div className="panel panel--neon">
+        <div className="in">
+          <p className="tagline">Todavía no agregaste ninguna canción.</p>
+        </div>
+      </div>
+    );
+  }
 
   const offset = CIRCUMFERENCE * (1 - state.pos / track.durationSec);
 
