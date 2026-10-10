@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["jsdom"],
+  serverExternalPackages: ["isomorphic-dompurify"],
 };
 
 export default nextConfig;
