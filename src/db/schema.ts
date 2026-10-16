@@ -9,15 +9,28 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-export const users = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull(),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
-  image: text("image"),
-});
+/**
+ * Tablas que pide @auth/drizzle-adapter para guardar usuarios y sesiones
+ * (login con GitHub). Los nombres y columnas siguen el esquema que documenta
+ * Auth.js para Drizzle + Postgres; no conviene renombrarlas.
+ */
+export const users = pgTable(
+  "user",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    email: text("email").notNull(),
+    emailVerified: timestamp("email_verified", { mode: "date" }),
+    image: text("image"),
+    // Solo tiene valor para cuentas creadas con el login convencional
+    // (ver src/lib/password.ts); las cuentas de GitHub quedan en null.
+    // NUNCA es la contraseña en texto plano: siempre es un hash de bcrypt.
+    passwordHash: text("password_hash"),
+  },
+  (user) => [uniqueIndex("user_email_lower_idx").on(sql`lower(${user.email})`)],
+);
 
 export const accounts = pgTable(
   "account",

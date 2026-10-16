@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { getHandleByUserId } from "@/data/get-profile";
 
 export async function AuthButton() {
@@ -7,14 +7,9 @@ export async function AuthButton() {
 
   if (!session?.user?.id) {
     return (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("github");
-        }}
-      >
-        <button type="submit" className="btn">Ingresar</button>
-      </form>
+      <Link href="/ingresar" className="btn">
+        Ingresar
+      </Link>
     );
   }
 

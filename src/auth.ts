@@ -1,8 +1,12 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { eq } from "drizzle-orm";
 import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import { db } from "./db";
 import { accounts, sessions, users, verificationTokens } from "./db/schema";
+import { verifyPassword } from "./lib/password";
+import { loginSchema } from "./lib/validation/auth";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -14,8 +18,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
-  // Sesiones en base de datos: al revocar una fila en "session" se cierra esa sesión.
-  // (La alternativa, session: { strategy: "jwt" }, evita la consulta a la base en cada
-  // request y es edge-safe, pero las sesiones no se pueden revocar desde el servidor.)
-  session: { strategy: "database" },
+  providers: [
+    ...authConfig.providers,
+    Credentials({
+      credentials: { email: {}, password: {} },
+      async authorize(raw) {
+        const parsed = loginSchema.safeParse(raw);
+        if (!parsed.success) return null;
+
+        const user = await db.query.users.findFirst({
+          where: eq(users.email, parsed.data.email),
+        });
+        if (!user?.passwordHash) return null;
+
+        const valid = await verifyPassword(parsed.data.password, user.passwordHash);
+        if (!valid) return null;
+
+        return { id: user.id, name: user.name, email: user.email, image: user.image };
+      },
+    }),
+  ],
+  session: { strategy: "jwt" },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) token.id = user.id;
+      return token;
+    },
+    session({ session, token }) {
+      if (typeof token.id === "string") session.user.id = token.id;
+      return session;
+    },
+  },
 });
