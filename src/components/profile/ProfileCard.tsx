@@ -1,9 +1,12 @@
+import Link from "next/link";
 import type { Profile } from "@/types/profile";
 import { FriendActions } from "./FriendActions";
 
-type Props = Pick<Profile, "handle" | "tagline" | "status" | "stats">;
+type Props = Pick<Profile, "handle" | "tagline" | "status" | "stats"> & {
+  isOwner: boolean;
+};
 
-export function ProfileCard({ handle, tagline, status, stats }: Props) {
+export function ProfileCard({ handle, tagline, status, stats, isOwner }: Props) {
   return (
     <div className="panel">
       <div className="in">
@@ -27,7 +30,15 @@ export function ProfileCard({ handle, tagline, status, stats }: Props) {
             <dd>{stats.memberSince}</dd>
           </div>
         </dl>
-        <FriendActions />
+        {isOwner ? (
+          <div className="actions">
+            <Link href="/perfil/editar" className="btn btn--solid">
+              Editar perfil
+            </Link>
+          </div>
+        ) : (
+          <FriendActions />
+        )}
       </div>
     </div>
   );

@@ -9,8 +9,14 @@ import { TopBar } from "./TopBar";
 import { Top8 } from "./Top8";
 import "./profile.css";
 
+type Props = {
+  profile: Profile;
+  isOwner: boolean;
+  canComment: boolean;
+};
+
 // Las clases o1..o7 solo importan en móvil: ordenan las tarjetas en una columna.
-export function ProfilePage({ profile }: { profile: Profile }) {
+export function ProfilePage({ profile, isOwner, canComment }: Props) {
   return (
     <>
       <TopBar theme={profile.theme} />
@@ -23,13 +29,14 @@ export function ProfilePage({ profile }: { profile: Profile }) {
                 tagline={profile.tagline}
                 status={profile.status}
                 stats={profile.stats}
+                isOwner={isOwner}
               />
             </div>
             <div className="o4">
               <About handle={profile.handle} />
             </div>
             <div className="o7">
-              <Comments initial={profile.comments} />
+              <Comments profileId={profile.id} initial={profile.comments} canComment={canComment} />
             </div>
           </div>
 

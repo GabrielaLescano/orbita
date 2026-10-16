@@ -1,6 +1,8 @@
 import type { Profile } from "@/types/profile";
 
 export const demoProfile: Profile = {
+  id: null,
+  userId: null,
   handle: "nova_kid",
   tagline: "Mapeo estrellas de noche y armo playlists para mirarlas.",
   status: "En línea",

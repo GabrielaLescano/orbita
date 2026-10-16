@@ -44,6 +44,8 @@ export type ProfileStats = {
 };
 
 export type Profile = {
+  id: string | null;
+  userId: string | null;
   handle: string;
   tagline: string;
   status: string;

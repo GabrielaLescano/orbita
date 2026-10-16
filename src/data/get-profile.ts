@@ -35,6 +35,8 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
   }
 
   return {
+    id: row.id,
+    userId: row.userId,
     handle: row.handle,
     tagline: row.tagline,
     status: row.status,
@@ -96,7 +98,7 @@ function formatMemberSince(date: Date): string {
 }
 
 /** Matiz HSL estable a partir de un id, para que el avatar de cada autor no cambie entre renders. */
-function hueFromId(id: string): number {
+export function hueFromId(id: string): number {
   let hash = 0;
   for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
   return hash % 360;

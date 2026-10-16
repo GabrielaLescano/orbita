@@ -1,29 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useState, useTransition } from "react";
+import { postComment } from "./comment-actions";
 import type { CSSVars } from "@/types/css";
 import type { ProfileComment } from "@/types/profile";
 
-export function Comments({ initial }: { initial: ProfileComment[] }) {
+type Props = {
+  profileId: string | null;
+  initial: ProfileComment[];
+  canComment: boolean;
+};
+
+export function Comments({ profileId, initial, canComment }: Props) {
   const [items, setItems] = useState<ProfileComment[]>(initial);
   const [text, setText] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
   function publish() {
+    if (!profileId) return;
     const body = text.trim();
     if (!body) return;
-    // React escapa el texto al renderizarlo, así que body nunca se interpreta como HTML.
-    setItems((prev) => [
-      {
-        id: crypto.randomUUID(),
-        author: "vos",
-        initial: "V",
-        hue: 280,
-        body,
-        postedLabel: "ahora",
-      },
-      ...prev,
-    ]);
-    setText("");
+
+    startTransition(async () => {
+      const result = await postComment(profileId, body);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setError(null);
+      setItems((prev) => [result.comment, ...prev]);
+      setText("");
+    });
   }
 
   return (
@@ -48,22 +57,39 @@ export function Comments({ initial }: { initial: ProfileComment[] }) {
             </li>
           ))}
         </ul>
-        <div className="compose">
-          <input
-            type="text"
-            value={text}
-            maxLength={140}
-            placeholder="Escribí un comentario"
-            aria-label="Escribí un comentario"
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") publish();
-            }}
-          />
-          <button type="button" className="btn" onClick={publish}>
-            Publicar
-          </button>
-        </div>
+
+        {profileId === null ? (
+          <p className="note" style={{ marginTop: 18 }}>
+            Este es un perfil de ejemplo: no se pueden dejar comentarios acá.
+          </p>
+        ) : canComment ? (
+          <div className="compose">
+            <input
+              type="text"
+              value={text}
+              maxLength={140}
+              placeholder="Escribí un comentario"
+              aria-label="Escribí un comentario"
+              disabled={pending}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") publish();
+              }}
+            />
+            <button type="button" className="btn" onClick={publish} disabled={pending}>
+              {pending ? "Publicando…" : "Publicar"}
+            </button>
+          </div>
+        ) : (
+          <p className="note" style={{ marginTop: 18 }}>
+            <Link href="/ingresar">Iniciá sesión</Link> para dejar un comentario.
+          </p>
+        )}
+        {error && (
+          <p className="form-field-error" role="alert" style={{ marginTop: 8 }}>
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

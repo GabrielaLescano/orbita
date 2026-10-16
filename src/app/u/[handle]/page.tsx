@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import { getProfileByHandle } from "@/data/get-profile";
 import { ProfilePage } from "@/components/profile/ProfilePage";
 
@@ -12,8 +13,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function UserProfilePage({ params }: Props) {
   const { handle } = await params;
-  const profile = await getProfileByHandle(handle);
+  const [profile, session] = await Promise.all([getProfileByHandle(handle), auth()]);
   if (!profile) notFound();
 
-  return <ProfilePage profile={profile} />;
+  const viewerId = session?.user?.id ?? null;
+  const isOwner = viewerId !== null && viewerId === profile.userId;
+
+  return <ProfilePage profile={profile} isOwner={isOwner} canComment={viewerId !== null} />;
 }
