@@ -1,9 +1,23 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
-export function FriendActions() {
+export function FriendActions({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [requested, setRequested] = useState(false);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="actions">
+        <Link href="/ingresar" className="btn btn--solid">
+          Agregar a amigos
+        </Link>
+        <Link href="/ingresar" className="btn">
+          Enviar mensaje
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="actions">

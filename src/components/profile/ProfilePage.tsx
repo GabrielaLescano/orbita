@@ -12,14 +12,14 @@ import "./profile.css";
 type Props = {
   profile: Profile;
   isOwner: boolean;
-  canComment: boolean;
+  isLoggedIn: boolean;
 };
 
 // Las clases o1..o7 solo importan en móvil: ordenan las tarjetas en una columna.
-export function ProfilePage({ profile, isOwner, canComment }: Props) {
+export function ProfilePage({ profile, isOwner, isLoggedIn }: Props) {
   return (
     <>
-      <TopBar theme={profile.theme} />
+      <TopBar theme={profile.theme} isOwner={isOwner} />
       <main className="profile-main">
         <div className="grid">
           <div className="col">
@@ -30,13 +30,14 @@ export function ProfilePage({ profile, isOwner, canComment }: Props) {
                 status={profile.status}
                 stats={profile.stats}
                 isOwner={isOwner}
+                isLoggedIn={isLoggedIn}
               />
             </div>
             <div className="o4">
               <About handle={profile.handle} />
             </div>
             <div className="o7">
-              <Comments profileId={profile.id} initial={profile.comments} canComment={canComment} />
+              <Comments profileId={profile.id} initial={profile.comments} canComment={isLoggedIn} />
             </div>
           </div>
 

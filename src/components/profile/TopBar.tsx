@@ -2,7 +2,12 @@ import type { ThemeTokens } from "@/types/profile";
 import { AuthButton } from "./AuthButton";
 import { ThemeMenu } from "./ThemeMenu";
 
-export function TopBar({ theme }: { theme: ThemeTokens }) {
+type Props = {
+  theme: ThemeTokens;
+  isOwner: boolean;
+};
+
+export function TopBar({ theme, isOwner }: Props) {
   return (
     <header className="topbar">
       <div className="topbar-in">
@@ -24,7 +29,7 @@ export function TopBar({ theme }: { theme: ThemeTokens }) {
         </nav>
         <span className="spacer" />
         <AuthButton />
-        <ThemeMenu initial={theme} />
+        {isOwner && <ThemeMenu initial={theme} />}
       </div>
     </header>
   );

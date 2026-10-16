@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { themePresets } from "@/lib/theme-presets";
 import type { CSSVars } from "@/types/css";
 import type { ThemeTokens } from "@/types/profile";
@@ -15,6 +15,28 @@ export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
   const panelId = useId();
   const [open, setOpen] = useState(false);
   const [tokens, setTokens] = useState<ThemeTokens>(initial);
+  const panelRef = useRef<HTMLElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function onPointerDown(e: PointerEvent) {
+      const target = e.target as Node;
+      if (panelRef.current?.contains(target) || buttonRef.current?.contains(target)) return;
+      setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   function update(next: ThemeTokens) {
     setTokens(next);
@@ -24,6 +46,7 @@ export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         className="btn"
         aria-expanded={open}
@@ -34,6 +57,7 @@ export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
       </button>
 
       <section
+        ref={panelRef}
         id={panelId}
         className="theme panel panel--neon"
         hidden={!open}

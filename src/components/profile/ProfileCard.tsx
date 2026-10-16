@@ -4,9 +4,10 @@ import { FriendActions } from "./FriendActions";
 
 type Props = Pick<Profile, "handle" | "tagline" | "status" | "stats"> & {
   isOwner: boolean;
+  isLoggedIn: boolean;
 };
 
-export function ProfileCard({ handle, tagline, status, stats, isOwner }: Props) {
+export function ProfileCard({ handle, tagline, status, stats, isOwner, isLoggedIn }: Props) {
   return (
     <div className="panel">
       <div className="in">
@@ -37,7 +38,7 @@ export function ProfileCard({ handle, tagline, status, stats, isOwner }: Props) 
             </Link>
           </div>
         ) : (
-          <FriendActions />
+          <FriendActions isLoggedIn={isLoggedIn} />
         )}
       </div>
     </div>

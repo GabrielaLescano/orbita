@@ -19,5 +19,5 @@ export default async function UserProfilePage({ params }: Props) {
   const viewerId = session?.user?.id ?? null;
   const isOwner = viewerId !== null && viewerId === profile.userId;
 
-  return <ProfilePage profile={profile} isOwner={isOwner} canComment={viewerId !== null} />;
+  return <ProfilePage profile={profile} isOwner={isOwner} isLoggedIn={viewerId !== null} />;
 }
