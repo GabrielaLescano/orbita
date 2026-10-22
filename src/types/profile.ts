@@ -55,6 +55,7 @@ export type Profile = {
   aboutHtml: string;
   customCss: string;
   tracks: Track[];
+  top8: Friend[];
   badges: Badge[];
   comments: ProfileComment[];
   theme: ThemeTokens;
