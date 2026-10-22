@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { getProfileByHandle } from "@/data/get-profile";
+import { getFriendshipStatus, getTop8 } from "@/data/friends";
 import { ProfilePage } from "@/components/profile/ProfilePage";
 
 type Props = { params: Promise<{ handle: string }> };
@@ -17,7 +18,23 @@ export default async function UserProfilePage({ params }: Props) {
   if (!profile) notFound();
 
   const viewerId = session?.user?.id ?? null;
+  // profile.userId es null para el perfil de ejemplo: nadie es "su dueño".
   const isOwner = viewerId !== null && viewerId === profile.userId;
 
-  return <ProfilePage profile={profile} isOwner={isOwner} isLoggedIn={viewerId !== null} />;
+  const [top8, friendshipStatus] = await Promise.all([
+    getTop8(profile.userId),
+    viewerId && profile.userId && !isOwner
+      ? getFriendshipStatus(viewerId, profile.userId)
+      : Promise.resolve("none" as const),
+  ]);
+
+  return (
+    <ProfilePage
+      profile={profile}
+      isOwner={isOwner}
+      isLoggedIn={viewerId !== null}
+      friendshipStatus={friendshipStatus}
+      top8={top8}
+    />
+  );
 }

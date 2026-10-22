@@ -4,10 +4,11 @@ import { ThemeMenu } from "./ThemeMenu";
 
 type Props = {
   theme: ThemeTokens;
+  profileId: string | null;
   isOwner: boolean;
 };
 
-export function TopBar({ theme, isOwner }: Props) {
+export function TopBar({ theme, profileId, isOwner }: Props) {
   return (
     <header className="topbar">
       <div className="topbar-in">
@@ -29,7 +30,7 @@ export function TopBar({ theme, isOwner }: Props) {
         </nav>
         <span className="spacer" />
         <AuthButton />
-        {isOwner && <ThemeMenu initial={theme} />}
+        {isOwner && profileId && <ThemeMenu initial={theme} profileId={profileId} />}
       </div>
     </header>
   );

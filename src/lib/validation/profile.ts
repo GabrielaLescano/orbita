@@ -3,7 +3,7 @@ import { MAX_CSS_CHARS } from "@/lib/sanitize";
 import { MAX_HTML_CHARS } from "@/lib/sanitize";
 import { HANDLE_PATTERN } from "@/data/get-profile";
 
-const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+export const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
 const RESERVED_HANDLES = new Set(["ingresar", "perfil", "u", "p", "api", "admin"]);
 

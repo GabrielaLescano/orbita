@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { themePresets } from "@/lib/theme-presets";
+import { saveTheme } from "./theme-actions";
 import type { CSSVars } from "@/types/css";
 import type { ThemeTokens } from "@/types/profile";
 
@@ -11,12 +12,19 @@ function applyTokens(tokens: ThemeTokens) {
   root.style.setProperty("--accent-2", tokens.accent2);
 }
 
-export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
+type Props = { initial: ThemeTokens; profileId: string };
+
+export function ThemeMenu({ initial, profileId }: Props) {
   const panelId = useId();
   const [open, setOpen] = useState(false);
   const [tokens, setTokens] = useState<ThemeTokens>(initial);
+  const [saved, setSaved] = useState<ThemeTokens>(initial);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
   const panelRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const dirty = tokens.accent1 !== saved.accent1 || tokens.accent2 !== saved.accent2;
 
   useEffect(() => {
     if (!open) return;
@@ -41,6 +49,18 @@ export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
   function update(next: ThemeTokens) {
     setTokens(next);
     applyTokens(next);
+  }
+
+  function save() {
+    setError(null);
+    startTransition(async () => {
+      const result = await saveTheme(profileId, tokens.accent1, tokens.accent2);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setSaved(tokens);
+    });
   }
 
   return (
@@ -97,6 +117,16 @@ export function ThemeMenu({ initial }: { initial: ThemeTokens }) {
           <p className="hint">
             Son variables CSS: cada usuario puede pisarlas con su propio estilo.
           </p>
+          <div className="theme-save-row">
+            <button type="button" className="btn btn--solid" onClick={save} disabled={pending || !dirty}>
+              {pending ? "Guardando…" : dirty ? "Guardar" : "Guardado"}
+            </button>
+            {error && (
+              <small className="form-field-error" role="alert">
+                {error}
+              </small>
+            )}
+          </div>
         </div>
       </section>
     </>

@@ -1,4 +1,5 @@
-import type { Profile } from "@/types/profile";
+import type { Profile, Friend } from "@/types/profile";
+import type { FriendshipStatus } from "@/data/friends";
 import { About } from "./About";
 import { Badges } from "./Badges";
 import { Comments } from "./Comments";
@@ -13,13 +14,15 @@ type Props = {
   profile: Profile;
   isOwner: boolean;
   isLoggedIn: boolean;
+  friendshipStatus: FriendshipStatus;
+  top8: Friend[];
 };
 
 // Las clases o1..o7 solo importan en móvil: ordenan las tarjetas en una columna.
-export function ProfilePage({ profile, isOwner, isLoggedIn }: Props) {
+export function ProfilePage({ profile, isOwner, isLoggedIn, friendshipStatus, top8 }: Props) {
   return (
     <>
-      <TopBar theme={profile.theme} isOwner={isOwner} />
+      <TopBar theme={profile.theme} profileId={profile.id} isOwner={isOwner} />
       <main className="profile-main">
         <div className="grid">
           <div className="col">
@@ -29,8 +32,10 @@ export function ProfilePage({ profile, isOwner, isLoggedIn }: Props) {
                 tagline={profile.tagline}
                 status={profile.status}
                 stats={profile.stats}
+                targetUserId={profile.userId}
                 isOwner={isOwner}
                 isLoggedIn={isLoggedIn}
+                friendshipStatus={friendshipStatus}
               />
             </div>
             <div className="o4">
@@ -49,7 +54,7 @@ export function ProfilePage({ profile, isOwner, isLoggedIn }: Props) {
               <Player tracks={profile.tracks} />
             </div>
             <div className="o5">
-              <Top8 friends={profile.top8} />
+              <Top8 friends={top8} />
             </div>
             <div className="o6">
               <Badges badges={profile.badges} />

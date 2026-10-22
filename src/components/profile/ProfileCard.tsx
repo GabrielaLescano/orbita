@@ -1,13 +1,25 @@
 import Link from "next/link";
 import type { Profile } from "@/types/profile";
+import type { FriendshipStatus } from "@/data/friends";
 import { FriendActions } from "./FriendActions";
 
 type Props = Pick<Profile, "handle" | "tagline" | "status" | "stats"> & {
+  targetUserId: string | null;
   isOwner: boolean;
   isLoggedIn: boolean;
+  friendshipStatus: FriendshipStatus;
 };
 
-export function ProfileCard({ handle, tagline, status, stats, isOwner, isLoggedIn }: Props) {
+export function ProfileCard({
+  handle,
+  tagline,
+  status,
+  stats,
+  targetUserId,
+  isOwner,
+  isLoggedIn,
+  friendshipStatus,
+}: Props) {
   return (
     <div className="panel">
       <div className="in">
@@ -37,8 +49,10 @@ export function ProfileCard({ handle, tagline, status, stats, isOwner, isLoggedI
               Editar perfil
             </Link>
           </div>
+        ) : targetUserId ? (
+          <FriendActions targetUserId={targetUserId} initialStatus={friendshipStatus} isLoggedIn={isLoggedIn} />
         ) : (
-          <FriendActions isLoggedIn={isLoggedIn} />
+          <p className="note">Este es un perfil de ejemplo.</p>
         )}
       </div>
     </div>

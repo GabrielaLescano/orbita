@@ -321,6 +321,7 @@
 .presets button:hover { border-color: var(--text); }
 .sw { width: 18px; height: 18px; border-radius: 50%; }
 .theme .hint { font-size: 13px; color: var(--muted); margin-top: 12px; }
+.theme-save-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
 
 /* ---------- Móvil: una columna con orden propio ---------- */
 @media (max-width: 880px) {
