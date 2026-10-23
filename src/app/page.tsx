@@ -1,9 +1,18 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
+import { auth } from "@/auth";
+import { getHandleByUserId } from "@/data/get-profile";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import "@/components/profile/profile.css";
 import "./landing.css";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  if (session?.user?.id) {
+    const handle = await getHandleByUserId(session.user.id);
+    redirect(handle ? `/u/${handle}` : "/perfil/editar");
+  }
+
   return (
     <>
       <LandingHeader />
