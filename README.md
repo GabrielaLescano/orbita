@@ -6,7 +6,7 @@ Es un proyecto personal para practicar arquitectura full-stack con Next.js. El f
 
 **Demo:** https://orbita-me.vercel.app
 
-> Estado: en desarrollo. Hoy la demo muestra el diseño del perfil con datos de ejemplo.
+> Estado: en desarrollo. Hoy la demo muestra el diseño del perfil con algunos datos de ejemplo. Los amigos, Top8 y comentarios son reales.
 
 ## Estado del proyecto
 
@@ -14,11 +14,11 @@ Es un proyecto personal para practicar arquitectura full-stack con Next.js. El f
 - [x] Panel de temas: los colores cambian en vivo con variables CSS
 - [x] Reproductor con interfaz completa (el audio todavía es simulado)
 - [x] Deploy en Vercel
-- [ ] Login con GitHub (Auth.js)
-- [ ] Base de datos Postgres (Drizzle ORM + Neon)
+- [x] Login con GitHub (Auth.js) y tradicional
+- [x] Base de datos Postgres (Drizzle ORM + Neon)
 - [ ] HTML y CSS propios por perfil, con sanitizado y iframe aislado
 - [ ] Reproductor con embeds de servicios de música
-- [ ] Comentarios y Top 8 reales
+- [x] Comentarios y Top 8 reales
 
 ## Decisiones de diseño
 
@@ -43,7 +43,7 @@ Es un proyecto personal para practicar arquitectura full-stack con Next.js. El f
 ## Cómo correrlo
 
 ```bash
-git clone https://github.com/TU_USUARIO/orbita.git
+git clone https://github.com/GabrielaLescano/orbita.git
 cd orbita
 npm install
 npm run dev
