@@ -1,5 +1,6 @@
 import type { Profile, Friend } from "@/types/profile";
 import type { FriendshipStatus, PendingRequest } from "@/data/friends";
+import { HEX_COLOR } from "@/lib/validation/profile";
 import { About } from "./About";
 import { Badges } from "./Badges";
 import { Comments } from "./Comments";
@@ -29,8 +30,12 @@ export function ProfilePage({
   top8,
   pendingRequests,
 }: Props) {
+  const accent1 = HEX_COLOR.test(profile.theme.accent1) ? profile.theme.accent1 : "#ff3ddb";
+  const accent2 = HEX_COLOR.test(profile.theme.accent2) ? profile.theme.accent2 : "#27d9f5";
+
   return (
     <>
+      <style>{`:root{--accent-1:${accent1};--accent-2:${accent2}}`}</style>
       <TopBar theme={profile.theme} profileId={profile.id} isOwner={isOwner} />
       <main className="profile-main">
         <div className="grid">

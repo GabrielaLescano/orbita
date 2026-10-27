@@ -25,7 +25,12 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
       tracks: { orderBy: [asc(tracks.position)] },
       comments: {
         orderBy: [asc(comments.createdAt)],
-        with: { author: { columns: { name: true, image: true } } },
+        with: {
+          author: {
+            columns: { name: true, image: true },
+            with: { profile: { columns: { handle: true } } },
+          },
+        },
       },
     },
   });
@@ -58,11 +63,11 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
     comments: row.comments.map((c: (typeof row.comments)[number]): ProfileComment => ({
       id: c.id,
       author: c.author.name ?? "usuario",
+      handle: c.author.profile?.handle ?? null,
       initial: (c.author.name ?? "?").charAt(0).toUpperCase(),
       hue: hueFromId(c.authorId),
       body: c.body,
       postedLabel: c.createdAt.toLocaleDateString("es-AR", { day: "numeric", month: "short" }),
-      handle: row.handle,
     })),
     theme: { accent1: row.themeAccent1, accent2: row.themeAccent2 },
   };
