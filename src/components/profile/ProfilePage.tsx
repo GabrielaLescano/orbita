@@ -77,7 +77,7 @@ export function ProfilePage({
         </div>
       </main>
       <footer className="profile-footer">
-        Mockup de diseño: los perfiles, nombres y canciones son de ejemplo.
+        Por el momento los mensajes, canciones e insignias son de ejemplo.
       </footer>
     </>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useId } from "react";
 import { loginWithPassword, type LoginState } from "./actions";
+import { PasswordInput } from "@/components/register/PasswordInput";
 
 const initialState: LoginState = { ok: false };
 
@@ -28,7 +29,7 @@ export function LoginForm() {
 
       <label htmlFor={passwordId}>
         Contraseña
-        <input id={passwordId} name="password" type="password" required />
+        <PasswordInput id={passwordId} name="password" required />
         {errors.password && <small className="form-field-error">{errors.password}</small>}
       </label>
 
