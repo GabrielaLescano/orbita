@@ -24,3 +24,31 @@
 .char-count { font: 400 12px var(--font-data); color: var(--muted); white-space: nowrap; }
 .char-count--near { color: var(--amber); }
 .profile-form button[disabled] { opacity: 0.6; cursor: not-allowed; }
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  padding: 0.25rem;
+  background: none;
+  border: 0;
+  color: inherit;
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  opacity: 1;
+}

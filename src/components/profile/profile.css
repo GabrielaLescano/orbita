@@ -152,6 +152,8 @@
 }
 .c-head { display: flex; gap: 10px; align-items: baseline; }
 .c-head b { font-weight: 600; }
+.c-head b a { color: inherit; }
+.c-head b a:hover { color: var(--accent-2); }
 .c-head time { font: 400 12px var(--font-data); color: var(--muted); }
 .c-body { color: #d8d3f0; }
 .compose { display: flex; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); flex-wrap: wrap; }

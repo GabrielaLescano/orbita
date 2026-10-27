@@ -41,9 +41,9 @@ a { color: var(--accent-2); }
     { id: "b6", label: "Invitó a 10 amigos", glyph: "●", earned: false },
   ],
   comments: [
-    { id: "c1", author: "kiro", initial: "K", hue: 190, body: "¡La playlist de anoche estuvo increíble! Pasame el tema 2.", postedLabel: "hace 2 h" },
-    { id: "c2", author: "vega_9", initial: "V", hue: 120, body: "Me copié el fondo de tu perfil, espero que no te moleste.", postedLabel: "ayer" },
-    { id: "c3", author: "lumi", initial: "L", hue: 45, body: "Cuando subas las fotos de Saturno avisame.", postedLabel: "hace 3 días" },
+    { id: "c1", author: "kiro", handle: null, initial: "K", hue: 190, body: "¡La playlist de anoche estuvo increíble! Pasame el tema 2.", postedLabel: "hace 2 h" },
+    { id: "c2", author: "vega_9", handle: null, initial: "V", hue: 120, body: "Me copié el fondo de tu perfil, espero que no te moleste.", postedLabel: "ayer" },
+    { id: "c3", author: "lumi", handle: null, initial: "L", hue: 45, body: "Cuando subas las fotos de Saturno avisame.", postedLabel: "hace 3 días" },
   ],
   theme: { accent1: "#ff3ddb", accent2: "#27d9f5" },
 };

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useId, useState } from "react";
 import { registerWithPassword, type RegisterState } from "./actions";
+import { PasswordInput } from "@/components/register/PasswordInput";
 
 const initialState: RegisterState = { ok: false };
 
@@ -48,6 +49,10 @@ export function RegisterForm() {
   const passwordInvalid = Boolean(passwordHint) || Boolean(errors.password);
   const confirmInvalid = Boolean(confirmHint) || Boolean(errors.confirmPassword);
 
+  // El formulario tiene noValidate (ver más abajo), así que el navegador no
+  // bloquea el envío por su cuenta: esto es lo único que evita mandar campos
+  // vacíos o inválidos. La validación que manda, igual, sigue siendo la del
+  // servidor (src/lib/validation/auth.ts).
   const canSubmit =
     name.trim().length > 0 &&
     handle.length > 0 &&
@@ -131,10 +136,9 @@ export function RegisterForm() {
 
       <label htmlFor={passwordId}>
         Contraseña
-        <input
+        <PasswordInput
           id={passwordId}
           name="password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -151,10 +155,9 @@ export function RegisterForm() {
 
       <label htmlFor={confirmId}>
         Repetir contraseña
-        <input
+        <PasswordInput
           id={confirmId}
           name="confirmPassword"
-          type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required

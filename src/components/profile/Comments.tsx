@@ -49,7 +49,7 @@ export function Comments({ profileId, initial, canComment }: Props) {
               </div>
               <div>
                 <div className="c-head">
-                  <b>{c.author}</b>
+                  <b>{c.handle ? <Link href={`/u/${c.handle}`}>{c.author}</Link> : c.author}</b>
                   <time>{c.postedLabel}</time>
                 </div>
                 <p className="c-body">{c.body}</p>

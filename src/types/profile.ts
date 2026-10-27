@@ -18,6 +18,7 @@ export type Friend = {
 export type ProfileComment = {
   id: string;
   author: string;
+  handle: string | null;
   initial: string;
   hue: number;
   body: string;

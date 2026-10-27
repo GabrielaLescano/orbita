@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getProfileByHandle } from "@/data/get-profile";
+import { getHandleByUserId, getProfileByHandle } from "@/data/get-profile";
 import { getFriendshipStatus, getPendingRequests, getTop8 } from "@/data/friends";
 import { ProfilePage } from "@/components/profile/ProfilePage";
 
@@ -20,6 +20,11 @@ export default async function UserProfilePage({ params }: Props) {
   const viewerId = session?.user?.id ?? null;
   // profile.userId es null para el perfil de ejemplo: nadie es "su dueño".
   const isOwner = viewerId !== null && viewerId === profile.userId;
+
+  if (viewerId !== null && !isOwner) {
+    const ownHandle = await getHandleByUserId(viewerId);
+    if (!ownHandle) redirect("/perfil/editar");
+  }
 
   const [top8, friendshipStatus, pendingRequests] = await Promise.all([
     getTop8(profile.userId),

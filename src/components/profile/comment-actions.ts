@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { comments, profiles } from "@/db/schema";
-import { hueFromId } from "@/data/get-profile";
+import { getHandleByUserId, hueFromId } from "@/data/get-profile";
 import type { ProfileComment } from "@/types/profile";
 
 export type PostCommentResult = { ok: true; comment: ProfileComment } | { ok: false; error: string };
@@ -25,16 +25,20 @@ export async function postComment(profileId: string, rawBody: string): Promise<P
   });
   if (!profile) return { ok: false, error: "Este perfil ya no existe." };
 
-  const [row] = await db
-    .insert(comments)
-    .values({ profileId, authorId: session.user.id, body })
-    .returning({ id: comments.id, createdAt: comments.createdAt });
+  const [[row], handle] = await Promise.all([
+    db
+      .insert(comments)
+      .values({ profileId, authorId: session.user.id, body })
+      .returning({ id: comments.id, createdAt: comments.createdAt }),
+    getHandleByUserId(session.user.id),
+  ]);
 
   return {
     ok: true,
     comment: {
       id: row.id,
       author: session.user.name ?? "usuario",
+      handle,
       initial: (session.user.name ?? "?").charAt(0).toUpperCase(),
       hue: hueFromId(session.user.id),
       body,

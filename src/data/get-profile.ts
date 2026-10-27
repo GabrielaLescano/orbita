@@ -54,7 +54,6 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
             }),
           )
         : demoProfile.tracks,
-    top8: demoProfile.top8,
     badges: demoProfile.badges,
     comments: row.comments.map((c: (typeof row.comments)[number]): ProfileComment => ({
       id: c.id,
@@ -63,6 +62,7 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
       hue: hueFromId(c.authorId),
       body: c.body,
       postedLabel: c.createdAt.toLocaleDateString("es-AR", { day: "numeric", month: "short" }),
+      handle: row.handle,
     })),
     theme: { accent1: row.themeAccent1, accent2: row.themeAccent2 },
   };

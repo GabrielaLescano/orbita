@@ -9,12 +9,12 @@ function assertNonce(nonce: string): void {
 }
 
 /**
- * CSP del documento del perfil:
- * - sandbox sin allow-scripts ni allow-same-origin: no ejecuta JavaScript y el contenido
+ * CSP del documento del perfil. Lo más importante:
+ * - sandbox sin allow-scripts ni allow-same-origin: no se ejecuta JavaScript y el contenido
  *   queda en un origen aislado, sin acceso a la sesión ni a la página que lo contiene;
  * - default-src 'none': todo lo que no se permite explícitamente queda bloqueado;
- * - los estilos solo aplican si traen el nonce de esta respuesta (los <style> y los style="..."
- *   que pasen sin él no se aplican);
+ * - los estilos solo valen si traen el nonce de esta respuesta (los <style> y los style="..."
+ *   que se cuelen sin él no se aplican);
  * - las imágenes solo pueden venir de https (o data: para las que ya vienen del CSS limpio).
  */
 export function buildProfileCsp(nonce: string): string {
@@ -56,7 +56,7 @@ type DocumentInput = {
 };
 
 /**
- * Se arma el documento HTML completo que se muestra dentro del iframe.
+ * Arma el documento HTML completo que se muestra dentro del iframe.
  * Recibe HTML y CSS que ya fueron sanitizados: esta función no los limpia.
  */
 export function buildProfileDocument({ html, css, theme, nonce }: DocumentInput): string {
