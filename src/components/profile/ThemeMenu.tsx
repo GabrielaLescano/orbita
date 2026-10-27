@@ -54,12 +54,17 @@ export function ThemeMenu({ initial, profileId }: Props) {
   function save() {
     setError(null);
     startTransition(async () => {
-      const result = await saveTheme(profileId, tokens.accent1, tokens.accent2);
-      if (!result.ok) {
-        setError(result.error);
-        return;
+      try {
+        const result = await saveTheme(profileId, tokens.accent1, tokens.accent2);
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+        setSaved(tokens);
+      } catch (err) {
+        console.error("[ThemeMenu] save() falló", err);
+        setError("No se pudo guardar. Mirá la consola del servidor para más detalle.");
       }
-      setSaved(tokens);
     });
   }
 

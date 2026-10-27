@@ -1,8 +1,9 @@
 import type { Profile, Friend } from "@/types/profile";
-import type { FriendshipStatus } from "@/data/friends";
+import type { FriendshipStatus, PendingRequest } from "@/data/friends";
 import { About } from "./About";
 import { Badges } from "./Badges";
 import { Comments } from "./Comments";
+import { FriendRequests } from "./FriendRequests";
 import { Hero } from "./Hero";
 import { Player } from "./Player";
 import { ProfileCard } from "./ProfileCard";
@@ -16,16 +17,29 @@ type Props = {
   isLoggedIn: boolean;
   friendshipStatus: FriendshipStatus;
   top8: Friend[];
+  pendingRequests: PendingRequest[];
 };
 
 // Las clases o1..o7 solo importan en móvil: ordenan las tarjetas en una columna.
-export function ProfilePage({ profile, isOwner, isLoggedIn, friendshipStatus, top8 }: Props) {
+export function ProfilePage({
+  profile,
+  isOwner,
+  isLoggedIn,
+  friendshipStatus,
+  top8,
+  pendingRequests,
+}: Props) {
   return (
     <>
       <TopBar theme={profile.theme} profileId={profile.id} isOwner={isOwner} />
       <main className="profile-main">
         <div className="grid">
           <div className="col">
+            {isOwner && (
+              <div className="o1b">
+                <FriendRequests initial={pendingRequests} />
+              </div>
+            )}
             <div className="o2">
               <ProfileCard
                 handle={profile.handle}

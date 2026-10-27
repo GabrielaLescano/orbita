@@ -57,6 +57,25 @@ export async function getTop8(ownerUserId: string | null): Promise<Friend[]> {
     }));
 }
 
+export type PendingRequest = {
+  requesterId: string;
+  name: string;
+  handle: string | null;
+};
+
+export async function getPendingRequests(ownerUserId: string): Promise<PendingRequest[]> {
+  const rows = await db.query.friendships.findMany({
+    where: and(eq(friendships.friendId, ownerUserId), eq(friendships.status, "pending")),
+    with: { user: { columns: { id: true, name: true }, with: { profile: { columns: { handle: true } } } } },
+  });
+
+  return rows.map((r) => ({
+    requesterId: r.user.id,
+    name: r.user.name ?? "usuario",
+    handle: r.user.profile?.handle ?? null,
+  }));
+}
+
 /** El estado de amistad entre quien mira el perfil y su dueño, visto desde quien mira. */
 export async function getFriendshipStatus(
   viewerId: string,

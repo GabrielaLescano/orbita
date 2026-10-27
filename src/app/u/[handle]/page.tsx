@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { getProfileByHandle } from "@/data/get-profile";
-import { getFriendshipStatus, getTop8 } from "@/data/friends";
+import { getFriendshipStatus, getPendingRequests, getTop8 } from "@/data/friends";
 import { ProfilePage } from "@/components/profile/ProfilePage";
 
 type Props = { params: Promise<{ handle: string }> };
@@ -21,11 +21,12 @@ export default async function UserProfilePage({ params }: Props) {
   // profile.userId es null para el perfil de ejemplo: nadie es "su dueño".
   const isOwner = viewerId !== null && viewerId === profile.userId;
 
-  const [top8, friendshipStatus] = await Promise.all([
+  const [top8, friendshipStatus, pendingRequests] = await Promise.all([
     getTop8(profile.userId),
     viewerId && profile.userId && !isOwner
       ? getFriendshipStatus(viewerId, profile.userId)
       : Promise.resolve("none" as const),
+    isOwner && profile.userId ? getPendingRequests(profile.userId) : Promise.resolve([]),
   ]);
 
   return (
@@ -35,6 +36,7 @@ export default async function UserProfilePage({ params }: Props) {
       isLoggedIn={viewerId !== null}
       friendshipStatus={friendshipStatus}
       top8={top8}
+      pendingRequests={pendingRequests}
     />
   );
 }

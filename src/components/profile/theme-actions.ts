@@ -19,9 +19,13 @@ export async function saveTheme(
   accent2: string,
 ): Promise<SaveThemeResult> {
   const session = await auth();
-  if (!session?.user?.id) return { ok: false, error: "Iniciá sesión de nuevo." };
+  if (!session?.user?.id) {
+    console.error("[saveTheme] sin sesión");
+    return { ok: false, error: "Iniciá sesión de nuevo." };
+  }
 
   if (!HEX_COLOR.test(accent1) || !HEX_COLOR.test(accent2)) {
+    console.error("[saveTheme] color inválido", { accent1, accent2 });
     return { ok: false, error: "Los colores tienen que ser hexadecimales, como #ff3ddb." };
   }
 
@@ -29,14 +33,29 @@ export async function saveTheme(
     where: eq(profiles.id, profileId),
     columns: { userId: true },
   });
-  if (!profile || profile.userId !== session.user.id) {
+  if (!profile) {
+    console.error("[saveTheme] no existe ningún perfil con id", profileId);
+    return { ok: false, error: "No podés editar ese perfil." };
+  }
+  if (profile.userId !== session.user.id) {
+    console.error("[saveTheme] el perfil es de otro usuario", {
+      profileUserId: profile.userId,
+      sessionUserId: session.user.id,
+    });
     return { ok: false, error: "No podés editar ese perfil." };
   }
 
-  await db
+  const [updated] = await db
     .update(profiles)
     .set({ themeAccent1: accent1, themeAccent2: accent2 })
-    .where(eq(profiles.id, profileId));
+    .where(eq(profiles.id, profileId))
+    .returning({ id: profiles.id, themeAccent1: profiles.themeAccent1, themeAccent2: profiles.themeAccent2 });
+
+  console.log("[saveTheme] UPDATE devolvió:", updated);
+  if (!updated) {
+    console.error("[saveTheme] el UPDATE no afectó ninguna fila (profileId no coincide con nada)");
+    return { ok: false, error: "No se pudo guardar: el perfil no se encontró al actualizar." };
+  }
 
   return { ok: true };
 }

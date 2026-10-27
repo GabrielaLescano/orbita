@@ -170,3 +170,8 @@ export const commentsRelations = relations(comments, ({ one }) => ({
   profile: one(profiles, { fields: [comments.profileId], references: [profiles.id] }),
   author: one(users, { fields: [comments.authorId], references: [users.id] }),
 }));
+
+export const friendshipsRelations = relations(friendships, ({ one }) => ({
+  user: one(users, { fields: [friendships.userId], references: [users.id] }),
+  friend: one(users, { fields: [friendships.friendId], references: [users.id] }),
+}));

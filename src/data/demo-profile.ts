@@ -32,16 +32,6 @@ a { color: var(--accent-2); }
     { id: "t2", title: "Señal de radio a las 3am", artist: "Polvo Estelar", durationSec: 187 },
     { id: "t3", title: "Gravedad cero", artist: "Cometa Club", durationSec: 256 },
   ],
-  top8: [
-    { id: "f1", handle: "kiro", initial: "K", hue: 190, online: true },
-    { id: "f2", handle: "vega_9", initial: "V", hue: 120, online: false },
-    { id: "f3", handle: "lumi", initial: "L", hue: 45, online: true },
-    { id: "f4", handle: "tato", initial: "T", hue: 330, online: false },
-    { id: "f5", handle: "mara.s", initial: "M", hue: 260, online: false },
-    { id: "f6", handle: "eclipse", initial: "E", hue: 10, online: true },
-    { id: "f7", handle: "pilar", initial: "P", hue: 160, online: false },
-    { id: "f8", handle: "zeta", initial: "Z", hue: 220, online: false },
-  ],
   badges: [
     { id: "b1", label: "Primeros 100 perfiles", glyph: "✦", earned: true },
     { id: "b2", label: "Playlist destacada", glyph: "♪", earned: true },

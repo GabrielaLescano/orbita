@@ -296,6 +296,11 @@
 }
 .note a { color: var(--accent-2); }
 
+.requests { display: flex; flex-direction: column; gap: 12px; }
+.requests li { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.requests-name a { color: var(--accent-2); }
+.requests-actions { display: flex; gap: 8px; }
+
 /* ---------- Panel de personalización ---------- */
 .theme {
   position: fixed;
@@ -327,6 +332,7 @@
 @media (max-width: 880px) {
   .grid { grid-template-columns: 1fr; }
   .col { display: contents; }
+  .o1b { order: 0; }
   .o1 { order: 1; } .o2 { order: 2; } .o3 { order: 3; } .o4 { order: 4; }
   .o5 { order: 5; } .o6 { order: 6; } .o7 { order: 7; }
   .spacer { display: none; }
