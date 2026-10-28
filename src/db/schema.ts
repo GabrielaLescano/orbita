@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   integer,
   pgTable,
   primaryKey,
@@ -125,6 +126,7 @@ export const comments = pgTable("comment", {
   authorId: text("author_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  parentId: text("parent_id").references((): AnyPgColumn => comments.id, { onDelete: "cascade" }),
   body: text("body").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
@@ -166,9 +168,15 @@ export const tracksRelations = relations(tracks, ({ one }) => ({
   profile: one(profiles, { fields: [tracks.profileId], references: [profiles.id] }),
 }));
 
-export const commentsRelations = relations(comments, ({ one }) => ({
+export const commentsRelations = relations(comments, ({ one, many }) => ({
   profile: one(profiles, { fields: [comments.profileId], references: [profiles.id] }),
   author: one(users, { fields: [comments.authorId], references: [users.id] }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id],
+    relationName: "replies",
+  }),
+  replies: many(comments, { relationName: "replies" }),
 }));
 
 export const friendshipsRelations = relations(friendships, ({ one }) => ({

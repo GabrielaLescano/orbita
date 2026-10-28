@@ -24,6 +24,7 @@ export type ProfileComment = {
   body: string;
   /** Por ahora un texto fijo; más adelante se calcula desde una fecha. */
   postedLabel: string;
+  replies: ProfileComment[];
 };
 
 export type Badge = {

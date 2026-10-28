@@ -76,6 +76,14 @@ export async function getPendingRequests(ownerUserId: string): Promise<PendingRe
   }));
 }
 
+export async function countPendingRequests(ownerUserId: string): Promise<number> {
+  const rows = await db.query.friendships.findMany({
+    where: and(eq(friendships.friendId, ownerUserId), eq(friendships.status, "pending")),
+    columns: { id: true },
+  });
+  return rows.length;
+}
+
 /** El estado de amistad entre quien mira el perfil y su dueño, visto desde quien mira. */
 export async function getFriendshipStatus(
   viewerId: string,

@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { comments, profiles, tracks, users } from "@/db/schema";
 import type { Profile, ProfileComment, Track } from "@/types/profile";
@@ -6,6 +6,27 @@ import { demoProfile } from "./demo-profile";
 
 /** Los handles válidos: letras, números, punto, guion y guion bajo. */
 export const HANDLE_PATTERN = /^[a-z0-9_.-]{3,30}$/i;
+
+type CommentRow = {
+  id: string;
+  authorId: string;
+  body: string;
+  createdAt: Date;
+  author: { name: string | null; profile: { handle: string } | null };
+};
+
+function toProfileComment(c: CommentRow, replies: ProfileComment[] = []): ProfileComment {
+  return {
+    id: c.id,
+    author: c.author.name ?? "usuario",
+    handle: c.author.profile?.handle ?? null,
+    initial: (c.author.name ?? "?").charAt(0).toUpperCase(),
+    hue: hueFromId(c.authorId),
+    body: c.body,
+    postedLabel: c.createdAt.toLocaleDateString("es-AR", { day: "numeric", month: "short" }),
+    replies,
+  };
+}
 
 /**
  * Busca un perfil por handle (sin distinguir mayúsculas).
@@ -24,11 +45,21 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
       user: { columns: { name: true, image: true } },
       tracks: { orderBy: [asc(tracks.position)] },
       comments: {
+        where: isNull(comments.parentId),
         orderBy: [asc(comments.createdAt)],
         with: {
           author: {
             columns: { name: true, image: true },
             with: { profile: { columns: { handle: true } } },
+          },
+          replies: {
+            orderBy: [asc(comments.createdAt)],
+            with: {
+              author: {
+                columns: { name: true, image: true },
+                with: { profile: { columns: { handle: true } } },
+              },
+            },
           },
         },
       },
@@ -60,15 +91,12 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
           )
         : demoProfile.tracks,
     badges: demoProfile.badges,
-    comments: row.comments.map((c: (typeof row.comments)[number]): ProfileComment => ({
-      id: c.id,
-      author: c.author.name ?? "usuario",
-      handle: c.author.profile?.handle ?? null,
-      initial: (c.author.name ?? "?").charAt(0).toUpperCase(),
-      hue: hueFromId(c.authorId),
-      body: c.body,
-      postedLabel: c.createdAt.toLocaleDateString("es-AR", { day: "numeric", month: "short" }),
-    })),
+    comments: row.comments.map((c: (typeof row.comments)[number]) =>
+      toProfileComment(
+        c,
+        c.replies.map((r: (typeof c.replies)[number]) => toProfileComment(r)),
+      ),
+    ),
     theme: { accent1: row.themeAccent1, accent2: row.themeAccent2 },
   };
 }
