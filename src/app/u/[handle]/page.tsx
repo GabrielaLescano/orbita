@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getHandleByUserId, getProfileByHandle } from "@/data/get-profile";
 import { getFriendshipStatus, getPendingRequests, getTop8 } from "@/data/friends";
+import { markNotificationsSeen } from "@/data/notifications";
 import { ProfilePage } from "@/components/profile/ProfilePage";
 
 type Props = { params: Promise<{ handle: string }> };
@@ -24,6 +25,10 @@ export default async function UserProfilePage({ params }: Props) {
   if (viewerId !== null && !isOwner) {
     const ownHandle = await getHandleByUserId(viewerId);
     if (!ownHandle) redirect("/perfil/editar");
+  }
+
+  if (isOwner && viewerId) {
+    await markNotificationsSeen(viewerId);
   }
 
   const [top8, friendshipStatus, pendingRequests] = await Promise.all([

@@ -29,6 +29,7 @@ export const users = pgTable(
     // (ver src/lib/password.ts); las cuentas de GitHub quedan en null.
     // NUNCA es la contraseña en texto plano: siempre es un hash de bcrypt.
     passwordHash: text("password_hash"),
+    notificationsSeenAt: timestamp("notifications_seen_at", { mode: "date" }).notNull().defaultNow(),
   },
   (user) => [uniqueIndex("user_email_lower_idx").on(sql`lower(${user.email})`)],
 );
