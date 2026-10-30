@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getHandleByUserId, getProfileByHandle } from "@/data/get-profile";
+import { getHandleByUserId, getProfileByHandle, incrementProfileViews } from "@/data/get-profile";
 import { getFriendshipStatus, getPendingRequests, getTop8 } from "@/data/friends";
 import { markNotificationsSeen } from "@/data/notifications";
 import { ProfilePage } from "@/components/profile/ProfilePage";
@@ -29,6 +29,10 @@ export default async function UserProfilePage({ params }: Props) {
 
   if (isOwner && viewerId) {
     await markNotificationsSeen(viewerId);
+  }
+
+  if (!isOwner && profile.id) {
+    await incrementProfileViews(profile.id);
   }
 
   const [top8, friendshipStatus, pendingRequests] = await Promise.all([

@@ -93,6 +93,7 @@ export const profiles = pgTable(
     customCss: text("custom_css").notNull().default(""),
     themeAccent1: text("theme_accent_1").notNull().default("#ff3ddb"),
     themeAccent2: text("theme_accent_2").notNull().default("#27d9f5"),
+    profileViews: integer("profile_views").notNull().default(0),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
   (profile) => [

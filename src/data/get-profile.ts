@@ -1,6 +1,6 @@
-import { asc, eq, isNull } from "drizzle-orm";
+import { and, asc, eq, isNull, or, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { comments, profiles, tracks, users } from "@/db/schema";
+import { comments, friendships, profiles, tracks, users } from "@/db/schema";
 import type { Profile, ProfileComment, Track } from "@/types/profile";
 import { demoProfile } from "./demo-profile";
 
@@ -70,13 +70,25 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
     return handle.toLowerCase() === demoProfile.handle.toLowerCase() ? demoProfile : null;
   }
 
+  const friendRows = await db.query.friendships.findMany({
+    where: and(
+      eq(friendships.status, "accepted"),
+      or(eq(friendships.userId, row.userId), eq(friendships.friendId, row.userId)),
+    ),
+    columns: { id: true },
+  });
+
   return {
     id: row.id,
     userId: row.userId,
     handle: row.handle,
     tagline: row.tagline,
     status: row.status,
-    stats: { visits: 0, friends: 0, memberSince: formatMemberSince(row.createdAt) },
+    stats: {
+      visits: row.profileViews,
+      friends: friendRows.length,
+      memberSince: formatMemberSince(row.createdAt),
+    },
     aboutHtml: row.aboutHtml,
     customCss: row.customCss,
     tracks:
@@ -102,6 +114,14 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
 }
 
 /** True si el handle ya está en uso (por cualquier perfil). */
+
+export async function incrementProfileViews(profileId: string): Promise<void> {
+  await db
+    .update(profiles)
+    .set({ profileViews: sql`${profiles.profileViews} + 1` })
+    .where(eq(profiles.id, profileId));
+}
+
 export async function isHandleTaken(handle: string): Promise<boolean> {
   const existing = await db.query.profiles.findFirst({
     where: eq(profiles.handle, handle.toLowerCase()),

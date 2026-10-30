@@ -77,7 +77,7 @@ export function Comments({ profileId, initial, canComment }: Props) {
         </h2>
         <ul className="comments">
           {items.map((c) => (
-            <li key={c.id}>
+            <li key={c.id} id={`comment-${c.id}`}>
               <div className="ava hex" style={{ "--h": c.hue } as CSSVars}>
                 {c.initial}
               </div>
@@ -97,7 +97,7 @@ export function Comments({ profileId, initial, canComment }: Props) {
                 {c.replies.length > 0 && (
                   <ul className="c-replies">
                     {c.replies.map((r) => (
-                      <li key={r.id}>
+                      <li key={r.id} id={`comment-${r.id}`}>
                         <div className="ava hex" style={{ "--h": r.hue } as CSSVars}>
                           {r.initial}
                         </div>

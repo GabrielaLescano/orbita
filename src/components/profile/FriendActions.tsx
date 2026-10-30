@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { sendFriendRequest } from "./friend-actions";
 import type { FriendshipStatus } from "@/data/friends";
@@ -21,6 +22,7 @@ export function FriendActions({ targetUserId, initialStatus, isLoggedIn }: Props
   const [status, setStatus] = useState<FriendshipStatus>(initialStatus);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   if (!isLoggedIn) {
     return (
@@ -45,6 +47,7 @@ export function FriendActions({ targetUserId, initialStatus, isLoggedIn }: Props
         return;
       }
       setStatus(result.status);
+      router.refresh();
     });
   }
 

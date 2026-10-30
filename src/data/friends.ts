@@ -18,6 +18,17 @@ export const demoTop8: Friend[] = [
 
 export type FriendshipStatus = "none" | "pending" | "accepted";
 
+export async function countFriends(ownerUserId: string): Promise<number> {
+  const rows = await db.query.friendships.findMany({
+    where: and(
+      eq(friendships.status, "accepted"),
+      or(eq(friendships.userId, ownerUserId), eq(friendships.friendId, ownerUserId)),
+    ),
+    columns: { id: true },
+  });
+  return rows.length;
+}
+
 /**
  * Hasta 8 amistades confirmadas del dueño del perfil, con el handle del
  * perfil de cada amigo (para poder linkearlo). Un perfil nuevo sin amigos

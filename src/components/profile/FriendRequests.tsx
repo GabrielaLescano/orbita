@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { acceptFriendRequest, rejectFriendRequest } from "./friend-actions";
 import type { PendingRequest } from "@/data/friends";
@@ -10,8 +11,7 @@ export function FriendRequests({ initial }: { initial: PendingRequest[] }) {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
-
-  if (items.length === 0) return null; // no ocupa espacio si no hay nada pendiente
+  const router = useRouter();
 
   function remove(requesterId: string) {
     setItems((prev) => prev.filter((r) => r.requesterId !== requesterId));
@@ -28,6 +28,7 @@ export function FriendRequests({ initial }: { initial: PendingRequest[] }) {
         return;
       }
       remove(requesterId);
+      router.refresh();
     });
   }
 
@@ -42,6 +43,7 @@ export function FriendRequests({ initial }: { initial: PendingRequest[] }) {
         return;
       }
       remove(requesterId);
+      router.refresh();
     });
   }
 
@@ -51,6 +53,7 @@ export function FriendRequests({ initial }: { initial: PendingRequest[] }) {
         <h2>
           Solicitudes <small>{items.length}</small>
         </h2>
+        {items.length === 0 && <p className="tagline">No tenés solicitudes pendientes.</p>}
         <ul className="requests">
           {items.map((r) => (
             <li key={r.requesterId}>
