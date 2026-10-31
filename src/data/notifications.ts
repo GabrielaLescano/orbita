@@ -3,12 +3,22 @@ import { db } from "@/db";
 import { comments, friendships, profiles, users } from "@/db/schema";
 import { getProfileIdByUserId } from "./get-profile";
 
-export type NotificationItem = {
-  id: string;
-  text: string;
-  href: string;
-  createdAt: Date;
-};
+export type NotificationItem =
+  | {
+      kind: "friend";
+      id: string;
+      text: string;
+      href: string;
+      createdAt: Date;
+      requesterId: string;
+    }
+  | {
+      kind: "comment";
+      id: string;
+      text: string;
+      href: string;
+      createdAt: Date;
+    };
 
 const SNIPPET_LEN = 60;
 const snippet = (body: string) => (body.length > SNIPPET_LEN ? `${body.slice(0, SNIPPET_LEN)}…` : body);
@@ -29,7 +39,12 @@ export async function getNotifications(userId: string): Promise<NotificationItem
   const requestsPromise = db.query.friendships.findMany({
     where: and(eq(friendships.friendId, userId), eq(friendships.status, "pending")),
     orderBy: [desc(friendships.createdAt)],
-    with: { user: { columns: { name: true } } },
+    with: {
+      user: {
+        columns: { id: true, name: true },
+        with: { profile: { columns: { handle: true } } },
+      },
+    },
   });
 
   const onMyWallPromise = ownProfile
@@ -79,14 +94,17 @@ export async function getNotifications(userId: string): Promise<NotificationItem
   const items: NotificationItem[] = [
     ...requests.map(
       (r): NotificationItem => ({
+        kind: "friend",
         id: `friend:${r.id}`,
         text: `${r.user.name ?? "Alguien"} te mandó una solicitud de amistad.`,
-        href: ownProfile ? `/u/${ownProfile.handle}` : "/perfil/editar",
+        href: r.user.profile ? `/u/${r.user.profile.handle}` : "#",
         createdAt: r.createdAt,
+        requesterId: r.user.id,
       }),
     ),
     ...onMyWall.map(
       (c): NotificationItem => ({
+        kind: "comment",
         id: `comment:${c.id}`,
         text: `${c.author.name ?? "Alguien"} comentó en tu perfil: "${snippet(c.body)}"`,
         href: ownProfile ? `/u/${ownProfile.handle}#comment-${c.id}` : "/perfil/editar",
@@ -95,6 +113,7 @@ export async function getNotifications(userId: string): Promise<NotificationItem
     ),
     ...repliesElsewhere.map(
       (c): NotificationItem => ({
+        kind: "comment",
         id: `comment:${c.id}`,
         text: `${c.author.name ?? "Alguien"} te respondió en el perfil de ${c.profile.handle}: "${snippet(c.body)}"`,
         href: `/u/${c.profile.handle}#comment-${c.id}`,

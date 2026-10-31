@@ -391,6 +391,12 @@
 }
 .notifications-list a:hover { background: var(--line); }
 
+.notification--friend { background: var(--surface-2); border-radius: 4px; padding: 10px; }
+.notification--friend a { padding: 0 0 8px; background: none; }
+.notification--friend a:hover { background: none; text-decoration: underline; }
+.notification-actions { display: flex; gap: 8px; }
+.notification-actions .btn { min-height: 32px; padding: 0 12px; font-size: 13px; }
+
 /* Resalta el comentario al llegar por un link con #comment-... */
 .comments > li:target,
 .c-replies > li:target {

@@ -1,14 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { acceptFriendRequest, rejectFriendRequest } from "./friend-actions";
 import type { NotificationItem } from "@/data/notifications";
 
 export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) {
   const panelId = useId();
   const [open, setOpen] = useState(false);
+  const [items, setItems] = useState<NotificationItem[]>(initial);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [, startTransition] = useTransition();
   const panelRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!open) return;
@@ -28,6 +35,23 @@ export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) 
     };
   }, [open]);
 
+  function respond(item: Extract<NotificationItem, { kind: "friend" }>, accept: boolean) {
+    setBusyId(item.id);
+    setError(null);
+    startTransition(async () => {
+      const result = accept
+        ? await acceptFriendRequest(item.requesterId)
+        : await rejectFriendRequest(item.requesterId);
+      setBusyId(null);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setItems((prev) => prev.filter((i) => i.id !== item.id));
+      router.refresh();
+    });
+  }
+
   return (
     <div className="notifications-wrap">
       <button
@@ -39,7 +63,7 @@ export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) 
         onClick={() => setOpen((o) => !o)}
       >
         Notificaciones
-        {initial.length > 0 && <span className="count">{initial.length}</span>}
+        {items.length > 0 && <span className="count">{items.length}</span>}
       </button>
 
       <section
@@ -51,18 +75,49 @@ export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) 
       >
         <div className="in">
           <h2>Notificaciones</h2>
-          {initial.length === 0 ? (
+          {items.length === 0 ? (
             <p className="tagline">No tenés notificaciones nuevas.</p>
           ) : (
             <ul className="notifications-list">
-              {initial.map((n) => (
-                <li key={n.id}>
-                  <Link href={n.href} onClick={() => setOpen(false)}>
-                    {n.text}
-                  </Link>
-                </li>
-              ))}
+              {items.map((item) =>
+                item.kind === "friend" ? (
+                  <li key={item.id} className="notification notification--friend">
+                    <Link href={item.href} onClick={() => setOpen(false)}>
+                      {item.text}
+                    </Link>
+                    <div className="notification-actions">
+                      <button
+                        type="button"
+                        className="btn btn--solid"
+                        disabled={busyId === item.id}
+                        onClick={() => respond(item, true)}
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        disabled={busyId === item.id}
+                        onClick={() => respond(item, false)}
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  </li>
+                ) : (
+                  <li key={item.id}>
+                    <Link href={item.href} onClick={() => setOpen(false)}>
+                      {item.text}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
+          )}
+          {error && (
+            <small className="form-field-error" role="alert">
+              {error}
+            </small>
           )}
         </div>
       </section>
