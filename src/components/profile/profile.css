@@ -201,6 +201,7 @@
 /* ---------- Hero ---------- */
 .hero .in { padding: 0; }
 .hero svg { display: block; width: 100%; height: auto; }
+.hero img { display: block; width: 100%; aspect-ratio: 520 / 380; object-fit: cover; }
 .hero .mood { position: absolute; left: 16px; bottom: 16px; margin: 0; background: color-mix(in srgb, var(--void) 80%, transparent); backdrop-filter: blur(4px); }
 
 /* ---------- Reproductor ---------- */

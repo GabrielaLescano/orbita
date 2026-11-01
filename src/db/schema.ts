@@ -29,7 +29,6 @@ export const users = pgTable(
     // (ver src/lib/password.ts); las cuentas de GitHub quedan en null.
     // NUNCA es la contraseña en texto plano: siempre es un hash de bcrypt.
     passwordHash: text("password_hash"),
-    notificationsSeenAt: timestamp("notifications_seen_at", { mode: "date" }).notNull().defaultNow(),
   },
   (user) => [uniqueIndex("user_email_lower_idx").on(sql`lower(${user.email})`)],
 );
@@ -93,6 +92,7 @@ export const profiles = pgTable(
     customCss: text("custom_css").notNull().default(""),
     themeAccent1: text("theme_accent_1").notNull().default("#ff3ddb"),
     themeAccent2: text("theme_accent_2").notNull().default("#27d9f5"),
+    avatarUrl: text("avatar_url"),
     profileViews: integer("profile_views").notNull().default(0),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
@@ -131,6 +131,7 @@ export const comments = pgTable("comment", {
   parentId: text("parent_id").references((): AnyPgColumn => comments.id, { onDelete: "cascade" }),
   body: text("body").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  dismissedAt: timestamp("dismissed_at", { mode: "date" }),
 });
 
 // Amistades dirigidas: A agrega a B. "status" habilita el flujo de solicitudes (pending/accepted) y "position" es el orden manual del Top 8.

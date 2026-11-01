@@ -52,6 +52,7 @@ export type Profile = {
   tagline: string;
   status: string;
   stats: ProfileStats;
+  avatarUrl: string | null;
   // Lo que escribe la persona. Se sanitiza (sanitizeHtml / sanitizeCss) y se muestra
   // dentro de un iframe aislado: ver src/app/p/[handle]/content/route.ts.
   aboutHtml: string;

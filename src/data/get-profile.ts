@@ -89,6 +89,7 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
       friends: friendRows.length,
       memberSince: formatMemberSince(row.createdAt),
     },
+    avatarUrl: row.avatarUrl,
     aboutHtml: row.aboutHtml,
     customCss: row.customCss,
     tracks:

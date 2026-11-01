@@ -48,6 +48,7 @@ export async function postComment(
       .values({ profileId, authorId: session.user.id, parentId: parentId ?? null, body })
       .returning({ id: comments.id, createdAt: comments.createdAt }),
     getHandleByUserId(session.user.id),
+    parentId ? db.update(comments).set({ dismissedAt: new Date() }).where(eq(comments.id, parentId)) : null,
   ]);
 
   return {
@@ -63,4 +64,31 @@ export async function postComment(
       replies: [],
     },
   };
+}
+
+export type DismissResult = { ok: true } | { ok: false; error: string };
+
+export async function dismissNotification(commentId: string): Promise<DismissResult> {
+  const session = await auth();
+  if (!session?.user?.id) return { ok: false, error: "Iniciá sesión de nuevo." };
+  const userId = session.user.id;
+
+  const comment = await db.query.comments.findFirst({
+    where: eq(comments.id, commentId),
+    columns: { id: true },
+    with: {
+      profile: { columns: { userId: true } },
+      parent: { columns: { authorId: true } },
+    },
+  });
+  if (!comment) return { ok: false, error: "Ese comentario ya no existe." };
+
+  const isOnMyWall = comment.profile.userId === userId;
+  const isReplyToMe = comment.parent?.authorId === userId;
+  if (!isOnMyWall && !isReplyToMe) {
+    return { ok: false, error: "No podés descartar esa notificación." };
+  }
+
+  await db.update(comments).set({ dismissedAt: new Date() }).where(eq(comments.id, commentId));
+  return { ok: true };
 }

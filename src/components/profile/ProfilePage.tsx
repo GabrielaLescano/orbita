@@ -67,7 +67,7 @@ export function ProfilePage({
 
           <div className="col">
             <div className="o1">
-              <Hero />
+              <Hero avatarUrl={profile.avatarUrl} />
             </div>
             <div className="o3">
               <Player tracks={profile.tracks} />

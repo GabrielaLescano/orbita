@@ -1,8 +1,12 @@
-export function Hero() {
+export function Hero({ avatarUrl }: { avatarUrl: string | null }) {
   return (
     <div className="glow">
       <div className="panel panel--neon hero">
         <div className="in">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- la URL es de Vercel Blob, un dominio externo
+            <img src={avatarUrl} alt="Foto de perfil" />
+          ) : (
           <svg viewBox="0 0 520 380" role="img" aria-label="Avatar: astronauta con auriculares frente a un planeta">
             <defs>
               <linearGradient id="hero-sky" x1="0" y1="0" x2="1" y2="1">
@@ -68,6 +72,7 @@ export function Hero() {
             <ellipse cx="156" cy="176" rx="17" ry="31" fill="#1a0f2e" strokeWidth="4" style={{ stroke: "var(--accent-1)" }} />
             <ellipse cx="344" cy="176" rx="17" ry="31" fill="#1a0f2e" strokeWidth="4" style={{ stroke: "var(--accent-1)" }} />
           </svg>
+          )}
           <div className="mood">
             <span className="dot" />
             en línea

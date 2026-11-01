@@ -23,6 +23,7 @@ export default async function EditProfilePage() {
         aboutHtml: existing.aboutHtml,
         customCss: existing.customCss,
         theme: { accent1: existing.themeAccent1, accent2: existing.themeAccent2 },
+        avatarUrl: existing.avatarUrl,
       }
     : null;
 

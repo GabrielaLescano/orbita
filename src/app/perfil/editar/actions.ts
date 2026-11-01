@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { isHandleTaken } from "@/data/get-profile";
+import { deleteAvatar, uploadAvatar, validateAvatarFile } from "@/lib/avatar";
 import { sanitizeCss, sanitizeHtml } from "@/lib/sanitize";
 import { profileFormSchema } from "@/lib/validation/profile";
 
@@ -54,10 +55,26 @@ export async function saveProfile(
   const data = parsed.data;
 
   const existing = await db.query.profiles.findFirst({ where: eq(profiles.userId, userId) });
+  const profileId = existing?.id ?? crypto.randomUUID();
 
   const handleTaken = await isHandleTaken(data.handle);
   if (handleTaken && existing?.handle.toLowerCase() !== data.handle) {
     return { ok: false, fieldErrors: { handle: "Ese handle ya está en uso." } };
+  }
+
+  const removeAvatar = formData.get("removeAvatar") === "on";
+  const avatarFile = formData.get("avatar");
+  let avatarUrl: string | null = existing?.avatarUrl ?? null;
+
+  if (removeAvatar) {
+    if (avatarUrl) await deleteAvatar(avatarUrl);
+    avatarUrl = null;
+  } else if (avatarFile instanceof File && avatarFile.size > 0) {
+    const check = validateAvatarFile(avatarFile);
+    if (!check.ok) return { ok: false, fieldErrors: { avatar: check.error } };
+    const newUrl = await uploadAvatar(avatarFile, profileId);
+    if (avatarUrl) await deleteAvatar(avatarUrl);
+    avatarUrl = newUrl;
   }
 
   const html = sanitizeHtml(data.aboutHtml);
@@ -71,12 +88,13 @@ export async function saveProfile(
     customCss: css,
     themeAccent1: data.themeAccent1,
     themeAccent2: data.themeAccent2,
+    avatarUrl,
   };
 
   if (existing) {
     await db.update(profiles).set(values).where(eq(profiles.userId, userId));
   } else {
-    await db.insert(profiles).values({ userId, ...values });
+    await db.insert(profiles).values({ id: profileId, userId, ...values });
   }
 
   redirect(`/u/${data.handle}`); // nunca retorna: redirect() lanza internamente

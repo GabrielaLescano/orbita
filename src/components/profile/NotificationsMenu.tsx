@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { acceptFriendRequest, rejectFriendRequest } from "./friend-actions";
+import { dismissNotification } from "./comment-actions";
 import type { NotificationItem } from "@/data/notifications";
 
 export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) {
@@ -49,6 +50,14 @@ export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) 
       }
       setItems((prev) => prev.filter((i) => i.id !== item.id));
       router.refresh();
+    });
+  }
+
+  function openComment(item: Extract<NotificationItem, { kind: "comment" }>) {
+    setOpen(false);
+    setItems((prev) => prev.filter((i) => i.id !== item.id));
+    startTransition(() => {
+      void dismissNotification(item.commentId);
     });
   }
 
@@ -106,7 +115,7 @@ export function NotificationsMenu({ initial }: { initial: NotificationItem[] }) 
                   </li>
                 ) : (
                   <li key={item.id}>
-                    <Link href={item.href} onClick={() => setOpen(false)}>
+                    <Link href={item.href} onClick={() => openComment(item)}>
                       {item.text}
                     </Link>
                   </li>

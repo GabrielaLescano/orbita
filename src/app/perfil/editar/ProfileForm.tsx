@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState, useId, useState } from "react";
+import { useActionState, useId, useState, type ChangeEvent } from "react";
 import { MAX_CSS_CHARS, MAX_HTML_CHARS } from "@/lib/sanitize";
 import type { Profile } from "@/types/profile";
 import { saveProfile, type SaveProfileState } from "./actions";
 
 type ProfileFormData = Pick<
   Profile,
-  "handle" | "tagline" | "status" | "aboutHtml" | "customCss" | "theme"
+  "handle" | "tagline" | "status" | "aboutHtml" | "customCss" | "theme" | "avatarUrl"
 >;
 
 type Props = { initial: ProfileFormData | null };
@@ -19,6 +19,7 @@ const EMPTY: ProfileFormData = {
   aboutHtml: "",
   customCss: "",
   theme: { accent1: "#ff3ddb", accent2: "#27d9f5" },
+  avatarUrl: null,
 };
 
 const initialState: SaveProfileState = { ok: false };
@@ -40,7 +41,29 @@ export function ProfileForm({ initial }: Props) {
   const [handle, setHandle] = useState(data.handle);
   const [aboutHtml, setAboutHtml] = useState(data.aboutHtml);
   const [customCss, setCustomCss] = useState(data.customCss);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(data.avatarUrl);
+  const [avatarFileSelected, setAvatarFileSelected] = useState(false);
+  const [removeAvatar, setRemoveAvatar] = useState(false);
 
+  function onAvatarChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setAvatarFileSelected(false);
+      setAvatarPreview(removeAvatar ? null : data.avatarUrl);
+      return;
+    }
+    setRemoveAvatar(false);
+    setAvatarFileSelected(true);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
+
+  function onRemoveAvatarChange(checked: boolean) {
+    setRemoveAvatar(checked);
+    setAvatarFileSelected(false);
+    setAvatarPreview(checked ? null : data.avatarUrl);
+  }
+
+  const avatarId = useId();
   const handleId = useId();
   const taglineId = useId();
   const handleHint = handleProblem(handle);
@@ -53,6 +76,36 @@ export function ProfileForm({ initial }: Props) {
           {state.error}
         </p>
       )}
+
+      <label htmlFor={avatarId}>
+        Foto de perfil
+        <div className="avatar-field">
+          {avatarPreview && (
+            // eslint-disable-next-line @next/next/no-img-element -- vista previa de un File local o una URL de Vercel Blob
+            <img src={avatarPreview} alt="" className="avatar-preview" />
+          )}
+          <input
+            id={avatarId}
+            name="avatar"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={onAvatarChange}
+          />
+        </div>
+        <small>JPG, PNG, WEBP o GIF. Hasta 4&nbsp;MB.</small>
+        {errors.avatar && <small className="form-field-error">{errors.avatar}</small>}
+        {data.avatarUrl && !avatarFileSelected && (
+          <label className="avatar-remove-row">
+            <input
+              type="checkbox"
+              name="removeAvatar"
+              checked={removeAvatar}
+              onChange={(e) => onRemoveAvatarChange(e.target.checked)}
+            />
+            Quitar la foto actual
+          </label>
+        )}
+      </label>
 
       <label htmlFor={handleId}>
         Handle

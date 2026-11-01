@@ -7,6 +7,7 @@ export const demoProfile: Profile = {
   tagline: "Mapeo estrellas de noche y armo playlists para mirarlas.",
   status: "En línea",
   stats: { visits: 1284, friends: 48, memberSince: "mar 2024" },
+  avatarUrl: null,
   aboutHtml: `
 <marquee>bienvenidos a mi órbita</marquee>
 <p>Hola, soy Nova. Fotografío el cielo desde la terraza, colecciono mapas estelares viejos y armo listas de música para las noches despejadas.</p>
