@@ -54,6 +54,9 @@ export function ProfileForm({ initial }: Props) {
     }
     setRemoveAvatar(false);
     setAvatarFileSelected(true);
+    // Vista previa inmediata, sin esperar a que se suba de verdad: se libera
+    // sola cuando el navegador recicla el objeto, no hace falta revocarla a mano
+    // porque el formulario se desmonta (redirect) apenas se guarda con éxito.
     setAvatarPreview(URL.createObjectURL(file));
   }
 
@@ -77,35 +80,46 @@ export function ProfileForm({ initial }: Props) {
         </p>
       )}
 
-      <label htmlFor={avatarId}>
-        Foto de perfil
-        <div className="avatar-field">
-          {avatarPreview && (
-            // eslint-disable-next-line @next/next/no-img-element -- vista previa de un File local o una URL de Vercel Blob
-            <img src={avatarPreview} alt="" className="avatar-preview" />
-          )}
+      <div className="field-label">Foto de perfil</div>
+      <div className="avatar-field">
+        {avatarPreview ? (
+          // eslint-disable-next-line @next/next/no-img-element -- vista previa de un File local o una URL de Vercel Blob
+          <img src={avatarPreview} alt="" className="avatar-preview" />
+        ) : (
+          <div className="avatar-preview avatar-preview--empty" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </div>
+        )}
+        <div className="avatar-field-controls">
+          <label htmlFor={avatarId} className="btn avatar-choose-btn">
+            {avatarPreview ? "Cambiar foto" : "Elegir foto"}
+          </label>
           <input
             id={avatarId}
             name="avatar"
             type="file"
+            className="sr-only"
             accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={onAvatarChange}
           />
+          <small>JPG, PNG, WEBP o GIF. Hasta 4&nbsp;MB.</small>
+          {data.avatarUrl && !avatarFileSelected && (
+            <label className="avatar-remove-row">
+              <input
+                type="checkbox"
+                name="removeAvatar"
+                checked={removeAvatar}
+                onChange={(e) => onRemoveAvatarChange(e.target.checked)}
+              />
+              Quitar la foto actual
+            </label>
+          )}
         </div>
-        <small>JPG, PNG, WEBP o GIF. Hasta 4&nbsp;MB.</small>
-        {errors.avatar && <small className="form-field-error">{errors.avatar}</small>}
-        {data.avatarUrl && !avatarFileSelected && (
-          <label className="avatar-remove-row">
-            <input
-              type="checkbox"
-              name="removeAvatar"
-              checked={removeAvatar}
-              onChange={(e) => onRemoveAvatarChange(e.target.checked)}
-            />
-            Quitar la foto actual
-          </label>
-        )}
-      </label>
+      </div>
+      {errors.avatar && <small className="form-field-error">{errors.avatar}</small>}
 
       <label htmlFor={handleId}>
         Handle

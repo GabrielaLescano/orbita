@@ -54,20 +54,52 @@
 }
 .avatar-field { display: flex; align-items: center; gap: 14px; }
 .avatar-preview {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--line);
   flex: none;
 }
-.avatar-field input[type="file"] { flex: 1; padding: 6px 0; border: 0; background: none; }
+.avatar-preview--empty {
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  color: var(--muted);
+  border-style: dashed;
+}
+
+.avatar-field-controls { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+
+.profile-form label.avatar-choose-btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  width: fit-content;
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .avatar-remove-row {
   display: flex !important;
   flex-direction: row !important;
   align-items: center;
   gap: 8px;
-  margin-top: 6px;
   font-size: 13px;
   color: var(--muted);
 }
