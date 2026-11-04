@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { comments, profiles } from "@/db/schema";
-import { getHandleByUserId, hueFromId } from "@/data/get-profile";
+import { getProfileSummaryByUserId, hueFromId } from "@/data/get-profile";
 import type { ProfileComment } from "@/types/profile";
 
 export type PostCommentResult = { ok: true; comment: ProfileComment } | { ok: false; error: string };
@@ -42,12 +42,12 @@ export async function postComment(
     }
   }
 
-  const [[row], handle] = await Promise.all([
+  const [[row], summary] = await Promise.all([
     db
       .insert(comments)
       .values({ profileId, authorId: session.user.id, parentId: parentId ?? null, body })
       .returning({ id: comments.id, createdAt: comments.createdAt }),
-    getHandleByUserId(session.user.id),
+    getProfileSummaryByUserId(session.user.id),
     parentId ? db.update(comments).set({ dismissedAt: new Date() }).where(eq(comments.id, parentId)) : null,
   ]);
 
@@ -56,7 +56,8 @@ export async function postComment(
     comment: {
       id: row.id,
       author: session.user.name ?? "usuario",
-      handle,
+      handle: summary?.handle ?? null,
+      avatarUrl: summary?.avatarUrl ?? null,
       initial: (session.user.name ?? "?").charAt(0).toUpperCase(),
       hue: hueFromId(session.user.id),
       body,

@@ -19,6 +19,7 @@ export type ProfileComment = {
   id: string;
   author: string;
   handle: string | null;
+  avatarUrl: string | null;
   initial: string;
   hue: number;
   body: string;

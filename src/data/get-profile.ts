@@ -12,7 +12,7 @@ type CommentRow = {
   authorId: string;
   body: string;
   createdAt: Date;
-  author: { name: string | null; profile: { handle: string } | null };
+  author: { name: string | null; profile: { handle: string; avatarUrl: string | null } | null };
 };
 
 function toProfileComment(c: CommentRow, replies: ProfileComment[] = []): ProfileComment {
@@ -20,6 +20,7 @@ function toProfileComment(c: CommentRow, replies: ProfileComment[] = []): Profil
     id: c.id,
     author: c.author.name ?? "usuario",
     handle: c.author.profile?.handle ?? null,
+    avatarUrl: c.author.profile?.avatarUrl ?? null,
     initial: (c.author.name ?? "?").charAt(0).toUpperCase(),
     hue: hueFromId(c.authorId),
     body: c.body,
@@ -50,14 +51,14 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
         with: {
           author: {
             columns: { name: true, image: true },
-            with: { profile: { columns: { handle: true } } },
+            with: { profile: { columns: { handle: true, avatarUrl: true } } },
           },
           replies: {
             orderBy: [asc(comments.createdAt)],
             with: {
               author: {
                 columns: { name: true, image: true },
-                with: { profile: { columns: { handle: true } } },
+                with: { profile: { columns: { handle: true, avatarUrl: true } } },
               },
             },
           },
@@ -137,6 +138,16 @@ export async function getHandleByUserId(userId: string): Promise<string | null> 
     columns: { handle: true },
   });
   return row?.handle ?? null;
+}
+
+export async function getProfileSummaryByUserId(
+  userId: string,
+): Promise<{ handle: string; avatarUrl: string | null } | null> {
+  const row = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, userId),
+    columns: { handle: true, avatarUrl: true },
+  });
+  return row ?? null;
 }
 
 export async function getProfileIdByUserId(userId: string): Promise<string | null> {

@@ -52,7 +52,10 @@
 .password-toggle:focus-visible {
   opacity: 1;
 }
-.avatar-field { display: flex; align-items: center; gap: 14px; }
+
+.field-label { font-size: 14px; color: var(--muted); }
+
+.avatar-field { display: flex; align-items: center; gap: 16px; }
 .avatar-preview {
   width: 72px;
   height: 72px;

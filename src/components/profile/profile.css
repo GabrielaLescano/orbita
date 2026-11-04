@@ -171,7 +171,6 @@
 .compose input:focus-visible { border-color: var(--accent-2); outline-offset: 0; }
 
 .c-reply-toggle {
-  margin-top: 6px;
   padding: 0;
   background: none;
   border: 0;
@@ -191,6 +190,11 @@
 }
 .c-replies li { display: flex; gap: 10px; }
 .c-replies .ava { width: 32px; height: 36px; font-size: 13px; }
+
+img.ava { height: 40px; object-fit: cover; background: none; }
+.c-replies img.ava { height: 32px; }
+
+.c-actions { display: flex; gap: 12px; margin-top: 6px; }
 
 .compose--reply {
   margin-top: 10px;

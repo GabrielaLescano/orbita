@@ -16,11 +16,23 @@ function Author({ c }: { c: Pick<ProfileComment, "author" | "handle"> }) {
   return <b>{c.handle ? <Link href={`/u/${c.handle}`}>{c.author}</Link> : c.author}</b>;
 }
 
+function Avatar({ c }: { c: Pick<ProfileComment, "avatarUrl" | "hue" | "initial" | "author"> }) {
+  if (c.avatarUrl) {
+    return <img src={c.avatarUrl} alt="" className="ava hex" />;
+  }
+  return (
+    <div className="ava hex" style={{ "--h": c.hue } as CSSVars}>
+      {c.initial}
+    </div>
+  );
+}
+
 export function Comments({ profileId, initial, canComment }: Props) {
   const [items, setItems] = useState<ProfileComment[]>(initial);
   const [text, setText] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -41,10 +53,21 @@ export function Comments({ profileId, initial, canComment }: Props) {
     });
   }
 
+  function setExpandedFor(commentId: string, value: boolean) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (value) next.add(commentId);
+      else next.delete(commentId);
+      return next;
+    });
+  }
+
   function toggleReply(commentId: string) {
     setError(null);
     setReplyText("");
-    setReplyingTo((current) => (current === commentId ? null : commentId));
+    const opening = replyingTo !== commentId;
+    setReplyingTo(opening ? commentId : null);
+    if (opening) setExpandedFor(commentId, true);
   }
 
   function publishReply(parentId: string) {
@@ -76,66 +99,78 @@ export function Comments({ profileId, initial, canComment }: Props) {
           Comentarios <small>{totalCount}</small>
         </h2>
         <ul className="comments">
-          {items.map((c) => (
-            <li key={c.id} id={`comment-${c.id}`}>
-              <div className="ava hex" style={{ "--h": c.hue } as CSSVars}>
-                {c.initial}
-              </div>
-              <div>
-                <div className="c-head">
-                  <Author c={c} />
-                  <time>{c.postedLabel}</time>
-                </div>
-                <p className="c-body">{c.body}</p>
-
-                {canComment && profileId && (
-                  <button type="button" className="c-reply-toggle" onClick={() => toggleReply(c.id)}>
-                    {replyingTo === c.id ? "Cancelar" : "Responder"}
-                  </button>
-                )}
-
-                {c.replies.length > 0 && (
-                  <ul className="c-replies">
-                    {c.replies.map((r) => (
-                      <li key={r.id} id={`comment-${r.id}`}>
-                        <div className="ava hex" style={{ "--h": r.hue } as CSSVars}>
-                          {r.initial}
-                        </div>
-                        <div>
-                          <div className="c-head">
-                            <Author c={r} />
-                            <time>{r.postedLabel}</time>
-                          </div>
-                          <p className="c-body">{r.body}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {replyingTo === c.id && (
-                  <div className="compose compose--reply">
-                    <input
-                      type="text"
-                      value={replyText}
-                      maxLength={140}
-                      placeholder={`Responderle a ${c.author}`}
-                      aria-label={`Responderle a ${c.author}`}
-                      disabled={pending}
-                      autoFocus
-                      onChange={(e) => setReplyText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") publishReply(c.id);
-                      }}
-                    />
-                    <button type="button" className="btn" onClick={() => publishReply(c.id)} disabled={pending}>
-                      {pending ? "Publicando…" : "Responder"}
-                    </button>
+          {items.map((c) => {
+            const isExpanded = expanded.has(c.id);
+            return (
+              <li key={c.id} id={`comment-${c.id}`}>
+                <Avatar c={c} />
+                <div>
+                  <div className="c-head">
+                    <Author c={c} />
+                    <time>{c.postedLabel}</time>
                   </div>
-                )}
-              </div>
-            </li>
-          ))}
+                  <p className="c-body">{c.body}</p>
+
+                  <div className="c-actions">
+                    {canComment && profileId && (
+                      <button type="button" className="c-reply-toggle" onClick={() => toggleReply(c.id)}>
+                        {replyingTo === c.id ? "Cancelar" : "Responder"}
+                      </button>
+                    )}
+                    {c.replies.length > 0 && (
+                      <button
+                        type="button"
+                        className="c-reply-toggle"
+                        onClick={() => setExpandedFor(c.id, !isExpanded)}
+                      >
+                        {isExpanded
+                          ? "Ocultar respuestas"
+                          : `Ver ${c.replies.length} ${c.replies.length === 1 ? "respuesta" : "respuestas"}`}
+                      </button>
+                    )}
+                  </div>
+
+                  {c.replies.length > 0 && isExpanded && (
+                    <ul className="c-replies">
+                      {c.replies.map((r) => (
+                        <li key={r.id} id={`comment-${r.id}`}>
+                          <Avatar c={r} />
+                          <div>
+                            <div className="c-head">
+                              <Author c={r} />
+                              <time>{r.postedLabel}</time>
+                            </div>
+                            <p className="c-body">{r.body}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {replyingTo === c.id && (
+                    <div className="compose compose--reply">
+                      <input
+                        type="text"
+                        value={replyText}
+                        maxLength={140}
+                        placeholder={`Responderle a ${c.author}`}
+                        aria-label={`Responderle a ${c.author}`}
+                        disabled={pending}
+                        autoFocus
+                        onChange={(e) => setReplyText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") publishReply(c.id);
+                        }}
+                      />
+                      <button type="button" className="btn" onClick={() => publishReply(c.id)} disabled={pending}>
+                        {pending ? "Publicando…" : "Responder"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         {profileId === null ? (
