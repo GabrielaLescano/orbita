@@ -191,8 +191,7 @@
 .c-replies li { display: flex; gap: 10px; }
 .c-replies .ava { width: 32px; height: 36px; font-size: 13px; }
 
-img.ava { height: 40px; object-fit: cover; background: none; }
-.c-replies img.ava { height: 32px; }
+img.hex { object-fit: cover; background: none; }
 
 .c-actions { display: flex; gap: 12px; margin-top: 6px; }
 

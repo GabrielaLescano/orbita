@@ -8,6 +8,7 @@ export type Track = {
 export type Friend = {
   id: string;
   handle: string;
+  avatarUrl: string | null;
   initial: string;
   /** Matiz HSL (0-360) para el avatar hexagonal. */
   hue: number;

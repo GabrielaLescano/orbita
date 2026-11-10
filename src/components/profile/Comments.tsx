@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { postComment } from "./comment-actions";
-import type { CSSVars } from "@/types/css";
+import { HexAvatar } from "./HexAvatar";
 import type { ProfileComment } from "@/types/profile";
 
 type Props = {
@@ -16,15 +16,8 @@ function Author({ c }: { c: Pick<ProfileComment, "author" | "handle"> }) {
   return <b>{c.handle ? <Link href={`/u/${c.handle}`}>{c.author}</Link> : c.author}</b>;
 }
 
-function Avatar({ c }: { c: Pick<ProfileComment, "avatarUrl" | "hue" | "initial" | "author"> }) {
-  if (c.avatarUrl) {
-    return <img src={c.avatarUrl} alt="" className="ava hex" />;
-  }
-  return (
-    <div className="ava hex" style={{ "--h": c.hue } as CSSVars}>
-      {c.initial}
-    </div>
-  );
+function CommentAvatar({ c }: { c: Pick<ProfileComment, "avatarUrl" | "hue" | "initial"> }) {
+  return <HexAvatar avatarUrl={c.avatarUrl} hue={c.hue} initial={c.initial} className="ava" />;
 }
 
 export function Comments({ profileId, initial, canComment }: Props) {
@@ -103,7 +96,7 @@ export function Comments({ profileId, initial, canComment }: Props) {
             const isExpanded = expanded.has(c.id);
             return (
               <li key={c.id} id={`comment-${c.id}`}>
-                <Avatar c={c} />
+                <CommentAvatar c={c} />
                 <div>
                   <div className="c-head">
                     <Author c={c} />
@@ -134,7 +127,7 @@ export function Comments({ profileId, initial, canComment }: Props) {
                     <ul className="c-replies">
                       {c.replies.map((r) => (
                         <li key={r.id} id={`comment-${r.id}`}>
-                          <Avatar c={r} />
+                          <CommentAvatar c={r} />
                           <div>
                             <div className="c-head">
                               <Author c={r} />

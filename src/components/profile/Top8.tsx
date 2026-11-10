@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CSSVars } from "@/types/css";
+import { HexAvatar } from "./HexAvatar";
 import type { Friend } from "@/types/profile";
 
 export function Top8({ friends }: { friends: Friend[] }) {
@@ -12,9 +12,12 @@ export function Top8({ friends }: { friends: Friend[] }) {
             {friends.map((f) => (
               <li key={f.id}>
                 <Link href={`/u/${f.handle}`}>
-                  <span className={`hex${f.online ? " on" : ""}`} style={{ "--h": f.hue } as CSSVars}>
-                    {f.initial}
-                  </span>
+                  <HexAvatar
+                    avatarUrl={f.avatarUrl}
+                    hue={f.hue}
+                    initial={f.initial}
+                    className={f.online ? "on" : undefined}
+                  />
                   {f.handle}
                 </Link>
               </li>
