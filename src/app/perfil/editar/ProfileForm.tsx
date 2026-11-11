@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState, useId, useState, type ChangeEvent } from "react";
+import { useActionState, useEffect, useId, useState, type ChangeEvent } from "react";
 import { MAX_CSS_CHARS, MAX_HTML_CHARS } from "@/lib/sanitize";
 import type { Profile } from "@/types/profile";
-import { saveProfile, type SaveProfileState } from "./actions";
+import { previewProfileContent, saveProfile, type SaveProfileState } from "./actions";
+
+const PREVIEW_DEBOUNCE_MS = 500;
 
 type ProfileFormData = Pick<
   Profile,
@@ -41,9 +43,31 @@ export function ProfileForm({ initial }: Props) {
   const [handle, setHandle] = useState(data.handle);
   const [aboutHtml, setAboutHtml] = useState(data.aboutHtml);
   const [customCss, setCustomCss] = useState(data.customCss);
+  const [accent1, setAccent1] = useState(data.theme.accent1);
+  const [accent2, setAccent2] = useState(data.theme.accent2);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(data.avatarUrl);
   const [avatarFileSelected, setAvatarFileSelected] = useState(false);
   const [removeAvatar, setRemoveAvatar] = useState(false);
+
+  const [previewHtml, setPreviewHtml] = useState("");
+  const [previewLoading, setPreviewLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setPreviewLoading(true);
+    const timer = setTimeout(() => {
+      previewProfileContent(aboutHtml, customCss, { accent1, accent2 }).then((html) => {
+        if (!cancelled) {
+          setPreviewHtml(html);
+          setPreviewLoading(false);
+        }
+      });
+    }, PREVIEW_DEBOUNCE_MS);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [aboutHtml, customCss, accent1, accent2]);
 
   function onAvatarChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -162,11 +186,23 @@ export function ProfileForm({ initial }: Props) {
       <div className="form-row">
         <label>
           Color principal
-          <input type="color" name="themeAccent1" defaultValue={data.theme.accent1} required />
+          <input
+            type="color"
+            name="themeAccent1"
+            value={accent1}
+            onChange={(e) => setAccent1(e.target.value)}
+            required
+          />
         </label>
         <label>
           Color secundario
-          <input type="color" name="themeAccent2" defaultValue={data.theme.accent2} required />
+          <input
+            type="color"
+            name="themeAccent2"
+            value={accent2}
+            onChange={(e) => setAccent2(e.target.value)}
+            required
+          />
         </label>
       </div>
 
@@ -205,6 +241,23 @@ export function ProfileForm({ initial }: Props) {
         <small>No hace falta repetir el selector del contenedor: se agrega solo.</small>
         {errors.customCss && <small className="form-field-error">{errors.customCss}</small>}
       </label>
+
+      <div className="preview-field">
+        <div className="label-row">
+          <span className="field-label" style={{ marginBottom: 0 }}>
+            Vista previa
+          </span>
+          {previewLoading && <span className="char-count">Actualizando…</span>}
+        </div>
+        <iframe
+          className="preview-frame"
+          title="Vista previa de tu perfil"
+          srcDoc={previewHtml}
+          sandbox="allow-popups allow-popups-to-escape-sandbox"
+          referrerPolicy="no-referrer"
+        />
+        <small>Así se va a ver "Sobre mí" en tu perfil. Se actualiza solo mientras escribís.</small>
+      </div>
 
       <button type="submit" className="btn btn--solid" disabled={pending || handleInvalid}>
         {pending ? "Guardando…" : "Guardar perfil"}

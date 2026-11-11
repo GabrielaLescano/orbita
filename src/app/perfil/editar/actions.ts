@@ -7,8 +7,10 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { isHandleTaken } from "@/data/get-profile";
 import { deleteAvatar, uploadAvatar, validateAvatarFile } from "@/lib/avatar";
+import { buildProfileDocument } from "@/lib/profile-document";
 import { sanitizeCss, sanitizeHtml } from "@/lib/sanitize";
 import { profileFormSchema } from "@/lib/validation/profile";
+import type { ThemeTokens } from "@/types/profile";
 
 export type SaveProfileState = {
   ok: boolean;
@@ -99,4 +101,21 @@ export async function saveProfile(
 
   redirect(`/u/${data.handle}`); // nunca retorna: redirect() lanza internamente
   return { ok: true };
+}
+
+export async function previewProfileContent(
+  rawHtml: string,
+  rawCss: string,
+  theme: ThemeTokens,
+): Promise<string> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return "";
+  }
+
+  const html = sanitizeHtml(rawHtml);
+  const { css } = sanitizeCss(rawCss);
+  const nonce = btoa(crypto.randomUUID());
+
+  return buildProfileDocument({ html, css, theme, nonce });
 }
