@@ -90,6 +90,7 @@ export const profiles = pgTable(
     // HTML y CSS YA SANITIZADOS (ver src/lib/sanitize): acá nunca se guarda contenido crudo. El guardado sanitiza una vez; la lectura no vuelve a limpiar.
     aboutHtml: text("about_html").notNull().default(""),
     customCss: text("custom_css").notNull().default(""),
+    customCssProfile: text("custom_css_profile").notNull().default(""),
     themeAccent1: text("theme_accent_1").notNull().default("#ff3ddb"),
     themeAccent2: text("theme_accent_2").notNull().default("#27d9f5"),
     avatarUrl: text("avatar_url"),

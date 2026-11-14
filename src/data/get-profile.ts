@@ -93,6 +93,7 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
     avatarUrl: row.avatarUrl,
     aboutHtml: row.aboutHtml,
     customCss: row.customCss,
+    customCssProfile: row.customCssProfile,
     tracks:
       row.tracks.length > 0
         ? row.tracks.map(

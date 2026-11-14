@@ -32,10 +32,12 @@ export function ProfilePage({
 }: Props) {
   const accent1 = HEX_COLOR.test(profile.theme.accent1) ? profile.theme.accent1 : "#ff3ddb";
   const accent2 = HEX_COLOR.test(profile.theme.accent2) ? profile.theme.accent2 : "#27d9f5";
+  const profileCss = profile.customCssProfile.replace(/</g, "\\3c ");
 
   return (
-    <>
+    <div className="profile-root">
       <style>{`:root{--accent-1:${accent1};--accent-2:${accent2}}`}</style>
+      {profileCss && <style>{profileCss}</style>}
       <TopBar theme={profile.theme} profileId={profile.id} isOwner={isOwner} />
       <main className="profile-main">
         <div className="grid">
@@ -84,6 +86,6 @@ export function ProfilePage({
       <footer className="profile-footer">
         Por el momento los mensajes, canciones e insignias son de ejemplo.
       </footer>
-    </>
+    </div>
   );
 }

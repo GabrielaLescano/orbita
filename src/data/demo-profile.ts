@@ -28,6 +28,7 @@ a { color: var(--accent-2); }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 16px 0 0; list-style: none; }
 .tags li { padding: 4px 12px; border: 1px solid var(--accent-2); border-radius: 999px; font-size: 13px; }
 `,
+  customCssProfile: "",
   tracks: [
     { id: "t1", title: "Nocturno en órbita baja", artist: "Vela Azul", durationSec: 214 },
     { id: "t2", title: "Señal de radio a las 3am", artist: "Polvo Estelar", durationSec: 187 },

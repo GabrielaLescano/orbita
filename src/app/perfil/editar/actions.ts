@@ -81,6 +81,7 @@ export async function saveProfile(
 
   const html = sanitizeHtml(data.aboutHtml);
   const { css } = sanitizeCss(data.customCss);
+  const { css: cssProfile } = sanitizeCss(data.customCss, { scope: ".profile-root" });
 
   const values = {
     handle: data.handle,
@@ -88,6 +89,7 @@ export async function saveProfile(
     status: data.status,
     aboutHtml: html,
     customCss: css,
+    customCssProfile: cssProfile,
     themeAccent1: data.themeAccent1,
     themeAccent2: data.themeAccent2,
     avatarUrl,
