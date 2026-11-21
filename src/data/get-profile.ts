@@ -101,7 +101,7 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
               id: t.id,
               title: t.title,
               artist: t.artist,
-              durationSec: t.durationSec,
+              soundcloudUrl: t.soundcloudUrl,
             }),
           )
         : demoProfile.tracks,

@@ -112,9 +112,9 @@ export const tracks = pgTable("track", {
   profileId: text("profile_id")
     .notNull()
     .references(() => profiles.id, { onDelete: "cascade" }),
+  soundcloudUrl: text("soundcloud_url").notNull(),
   title: text("title").notNull(),
   artist: text("artist").notNull(),
-  durationSec: integer("duration_sec").notNull(),
   position: integer("position").notNull().default(0),
 });
 

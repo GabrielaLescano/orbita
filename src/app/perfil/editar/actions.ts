@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { isHandleTaken } from "@/data/get-profile";
 import { deleteAvatar, uploadAvatar, validateAvatarFile } from "@/lib/avatar";
-import { buildProfileDocument } from "@/lib/profile-document";
+import { buildProfilePreviewDocument } from "@/lib/profile-preview-document";
 import { sanitizeCss, sanitizeHtml } from "@/lib/sanitize";
 import { profileFormSchema } from "@/lib/validation/profile";
 import type { ThemeTokens } from "@/types/profile";
@@ -117,7 +117,8 @@ export async function previewProfileContent(
 
   const html = sanitizeHtml(rawHtml);
   const { css } = sanitizeCss(rawCss);
+  const { css: cssProfile } = sanitizeCss(rawCss, { scope: ".profile-root" });
   const nonce = btoa(crypto.randomUUID());
 
-  return buildProfileDocument({ html, css, theme, nonce });
+  return buildProfilePreviewDocument({ html, css, cssProfile, theme, nonce });
 }

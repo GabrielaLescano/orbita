@@ -30,10 +30,19 @@ a { color: var(--accent-2); }
 `,
   customCssProfile: "",
   tracks: [
-    { id: "t1", title: "Nocturno en órbita baja", artist: "Vela Azul", durationSec: 214 },
-    { id: "t2", title: "Señal de radio a las 3am", artist: "Polvo Estelar", durationSec: 187 },
-    { id: "t3", title: "Gravedad cero", artist: "Cometa Club", durationSec: 256 },
-  ],
+    {
+        "id": "1",
+        "title": "Odd Look (feat. The Weeknd)",
+        "artist": "Kavinsky",
+        "soundcloudUrl": "https://soundcloud.com/deadcruiser/kavinsky-odd-look-ft-the?si=8d6d22bdd8784137baf894fdb0e306af&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing#t=0%3A10"
+    },
+    {
+        "id": "2",
+        "title": "Training Season",
+        "artist": "Dua Lipa",
+        "soundcloudUrl": "https://soundcloud.com/dualipa/training-season?si=a813780b3c5d4b7a9b91b187e726eadd&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing#t=0%3A20"
+    },
+],
   badges: [
     { id: "b1", label: "Primeros 100 perfiles", glyph: "✦", earned: true },
     { id: "b2", label: "Playlist destacada", glyph: "♪", earned: true },

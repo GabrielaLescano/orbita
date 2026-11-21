@@ -1,9 +1,10 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
+import { profiles, tracks } from "@/db/schema";
 import { ProfileForm } from "./ProfileForm";
+import { TrackManager } from "./TrackManager";
 import "@/components/profile/profile.css";
 import "./editar.css";
 
@@ -14,6 +15,14 @@ export default async function EditProfilePage() {
   const existing = await db.query.profiles.findFirst({
     where: eq(profiles.userId, session.user.id),
   });
+
+  const existingTracks = existing
+    ? await db.query.tracks.findMany({
+        where: eq(tracks.profileId, existing.id),
+        orderBy: [asc(tracks.position)],
+        columns: { id: true, title: true, artist: true, soundcloudUrl: true },
+      })
+    : [];
 
   const initial = existing
     ? {
@@ -40,6 +49,7 @@ export default async function EditProfilePage() {
           <ProfileForm initial={initial} />
         </div>
       </div>
+      {existing && <TrackManager initial={existingTracks} />}
     </main>
   );
 }

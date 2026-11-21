@@ -268,6 +268,27 @@ img.hex { object-fit: cover; background: none; }
 .playlist button[aria-current="true"] { border-left-color: var(--accent-2); background: var(--surface-2); }
 .playlist .d { font: 400 12px var(--font-data); color: var(--muted); padding-top: 3px; }
 
+/* El iframe real de SoundCloud: oculto a la vista, pero NO display:none
+   (algunos navegadores suspenden/throttlean eso, y podría cortar el audio). */
+.player-hidden-frame {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.sc-attribution {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sc-attribution:hover { color: var(--accent-2); }
+
 /* ---------- Top 8 e insignias ---------- */
 .friends { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 8px; }
 .friends a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; }
