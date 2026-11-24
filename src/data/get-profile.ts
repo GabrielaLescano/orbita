@@ -94,17 +94,12 @@ export async function getProfileByHandle(handle: string): Promise<Profile | null
     aboutHtml: row.aboutHtml,
     customCss: row.customCss,
     customCssProfile: row.customCssProfile,
-    tracks:
-      row.tracks.length > 0
-        ? row.tracks.map(
-            (t: (typeof row.tracks)[number]): Track => ({
-              id: t.id,
-              title: t.title,
-              artist: t.artist,
-              soundcloudUrl: t.soundcloudUrl,
-            }),
-          )
-        : demoProfile.tracks,
+    tracks: row.tracks.map((t): Track => ({
+      id: t.id,
+      title: t.title,
+      artist: t.artist,
+      soundcloudUrl: t.soundcloudUrl,
+    })),
     badges: demoProfile.badges,
     comments: row.comments.map((c: (typeof row.comments)[number]) =>
       toProfileComment(
