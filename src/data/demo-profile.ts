@@ -29,7 +29,8 @@ a { color: var(--accent-2); }
 .tags li { padding: 4px 12px; border: 1px solid var(--accent-2); border-radius: 999px; font-size: 13px; }
 `,
   customCssProfile: "",
-  tracks: [
+  tracks: [],
+  /* tracks: [
     {
         "id": "1",
         "title": "Odd Look (feat. The Weeknd)",
@@ -42,7 +43,7 @@ a { color: var(--accent-2); }
         "artist": "Dua Lipa",
         "soundcloudUrl": "https://soundcloud.com/dualipa/training-season?si=a813780b3c5d4b7a9b91b187e726eadd&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing#t=0%3A20"
     },
-],
+],*/
   badges: [
     { id: "b1", label: "Primeros 100 perfiles", glyph: "✦", earned: true },
     { id: "b2", label: "Playlist destacada", glyph: "♪", earned: true },

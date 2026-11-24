@@ -72,7 +72,7 @@ export function ProfilePage({
               <Hero avatarUrl={profile.avatarUrl} />
             </div>
             <div className="o3">
-              <Player tracks={profile.tracks} />
+              <Player tracks={profile.tracks} isOwner={isOwner} />
             </div>
             <div className="o5">
               <Top8 friends={top8} />

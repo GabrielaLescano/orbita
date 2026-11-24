@@ -252,8 +252,13 @@ img.hex { object-fit: cover; background: none; }
 .skip button:hover { border-color: var(--accent-2); }
 .skip svg { width: 18px; height: 18px; }
 .playlist { margin-top: 20px; border-top: 1px solid var(--line); }
-.playlist button {
-  width: 100%;
+.playlist li {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+}
+.playlist li > button:first-child {
+  flex: 1;
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -262,11 +267,21 @@ img.hex { object-fit: cover; background: none; }
   background: transparent;
   border: 0;
   border-left: 3px solid transparent;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
 }
-.playlist button:hover { background: var(--surface-2); }
-.playlist button[aria-current="true"] { border-left-color: var(--accent-2); background: var(--surface-2); }
+.playlist li > button:first-child:hover { background: var(--surface-2); }
+.playlist li > button[aria-current="true"] { border-left-color: var(--accent-2); background: var(--surface-2); }
 .playlist .d { font: 400 12px var(--font-data); color: var(--muted); padding-top: 3px; }
+
+.playlist-remove {
+  flex: none;
+  padding: 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--line);
+}
+.playlist-remove:hover { color: #ff8a8a; }
 
 /* El iframe real de SoundCloud: oculto a la vista, pero NO display:none
    (algunos navegadores suspenden/throttlean eso, y podría cortar el audio). */
@@ -274,10 +289,8 @@ img.hex { object-fit: cover; background: none; }
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
   border: 0;
 }
 
@@ -428,4 +441,30 @@ img.hex { object-fit: cover; background: none; }
   outline: 2px solid var(--accent-2);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+/* ---------- Edición inline del reproductor (solo el dueño) ---------- */
+.player-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.player-edit-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.player-edit-toggle:hover { color: var(--text); border-color: var(--accent-2); }
+
+.player-add { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: flex-start; }
+.player-add input { flex: 1 1 220px; }
+.player-add .form-field-error { flex-basis: 100%; }
+
+.volume {
+  flex: none;
+  width: 70px;
+  align-self: center;
+  margin-left: 4px;
+  accent-color: var(--accent-2);
 }
